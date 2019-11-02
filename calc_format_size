@@ -1,0 +1,223 @@
+#!/usr/bin/env node
+
+const FORMATS_LIST=`
+LDPI 	23 x 33 		759 пикс
+	23 x 38 		768 пикс
+MDPI 	32 x 44 	8:11 	1,408 пикс
+TVDPI 	42,6 x 58,5 		2,492 пикс
+HDPI 	48 x 66 	8:11 	3,168 пикс
+XHDPI 	64 x 88 	8:11 	5,632 пикс
+XXHDPI 	96 x 132 	8:11 	12,672 пикс
+QVGA 	320 x 240 	4:3 	76,8 кпикс
+SIF (MPEG1 SIF) 	352 x 240 	22:15 	84,48 кпикс
+CIF (NTSC) (MPEG1 VideoCD) 	352 x 240 	11:9 	84,48 кпикс
+CIF (PAL) (MPEG1 VideoCD) 	352 x 288 	11:9 	101,37 кпикс
+WQVGA 	400 x 240 	5:3 	96 кпикс
+[MPEG2 SV-CD] 	480 x 576 	5:6 	276,48 кпикс
+HVGA 	640 x 240 или 320 x 480 	8:3 или 2:3 	153,6 кпикс
+nHD 	640 x 360 	16:9 	230,4 кпикс
+VGA 	640 x 480 	4:3 	307,2 кпикс
+2CIF (NTSC) (Half D1) 	704 x 240 	44:15 	168,96 кпикс
+2CIF (PAL) (Half D1) 	704 x 288 	22:9 	202,7 кпикс
+SATRip 	720 x 400 	9:5 	288 кпикс
+4CIF (NTSC) (D1) 	704 x 480 	44:30 (22:15) 	337,92 кпикс
+4CIF (PAL) (D1) 	704 x 576 	22:18 (11:9) 	405,5 кпикс
+WVGA 	800 x 480 	5:3 	384 кпикс
+SVGA 	800 x 600 	4:3 	480 кпикс
+FWVGA 	854 x 480 	16:9 	409,92 кпикс
+qHD 	960 x 540 	16:9 	518,4 кпикс
+WSVGA 	1024 x 600 	128:75 	614,4 кпикс
+XGA 	1024 x 768 	4:3 	786,432 кпикс
+XGA+ 	1152 x 864 	4:3 	995,3 кпикс
+WXVGA 	1200 x 600 	2:1 	720 кпикс
+HDV 720p (HD 720p) 	1280 x 720 	16:9 	921,6 кпикс
+WXGA 	1280 x 768 	5:3 	983,04 кпикс
+SXGA 	1280 x 1024 	5:4 	1,31 Мпикс
+16CIF 	1408 x 1152 	11:9 	1,62 Мпикс
+WXGA+ 	1440 x 900 	16:10 	1,296 Мпикс
+SXGA+ 	1400 x 1050 	4:3 	1,47 Мпикс
+HDV 1080i (Анаморфный Full HD с неквадратным пикселем) 	1440 x 1080 	4:3 	1,55 Мпикс
+XJXGA 	1536 x 960 	16:10 	1,475 Мпикс
+WSXGA ? 	1536 x 1024 	3:2 	1,57 Мпикс
+WXGA++ (HD+) 	1600 x 900 	16:9 	1,44 Мпикс
+WSXGA 	1600 x 1024 	25:16 	1,64 Мпикс
+UXGA 	1600 x 1200 	4:3 	1,92 Мпикс
+WSXGA+ 	1680 x 1050 	16:10 	1,76 Мпикс
+HDTV (Full HD) (FHD) 1080p 	1920 x 1080 	16:9 	2,07 Мпикс
+WUXGA 	1920 x 1200 	16:10 	2,3 Мпикс
+2K DCI (Cinema 2K) 	2048 x 1080 	19:10 	2,2 Мпикс
+QWXGA 	2048 x 1152 	16:9 	2,36 Мпикс
+QXGA 	2048 x 1536 	4:3 	3,15 Мпикс
+	2560 x 1080 	64:27 	2,76 Мпикс
+WQXGA (WQHD) (QHD) 	2560 x 1440 	16:9 	3,68 Мпикс
+WQXGA 	2560 x 1600 	16:10 	4,09 Мпикс
+QSXGA 	2560 x 2048 	5:4 	5,24 Мпикс
+WQXGA+ 	3200 x 1800 	16:9 	5,76 Мпикс
+WQSXGA 	3200 x 2048 	25:16 	6,55 Мпикс
+QUXGA 	3200 x 2400 	4:3 	7,68 Мпикс
+Ultra WQHD 	3440 x 1440 	21:9 	4,95 Мпикс
+4K UHD (Ultra HD)[1] (UHDTV-1) 	3840 x 2160 	16:9 	8,29 Мпикс
+WQUXGA 	3840 x 2400 	16:10 	9,2 Мпикс
+4K DCI (Cinema 4K) 	4096 x 2160 	19:10 	8,8 Мпикс
+5K / UHD + 	5120 x 2880 	16:9 	14,7 Мпикс
+HSXGA 	5120 x 4096 	5:4 	20,97 Мпикс
+WHSXGA 	6400 x 4096 	25:16 	26,2 Мпикс
+HUXGA 	6400 x 4800 	4:3 	30,72 Мпикс
+8K UHD (UHDTV-2) (Super Hi-Vision) 	7680 x 4320 	16:9 	33,17 Мпикс
+WHUXGA 	7680 x 4800 	16:10 	36,86 Мпикс
+`;
+
+const COMPUTER_FORMATS_LIST=`
+VIC-II multicolor, IBM PCjr 16-color 	160 x 200 	0,80 (4:5) 	32 000
+TMS9918, ZX Spectrum 	256 x 192 	1,33 (4:3) 	49 152
+CGA 4-color (1981), Atari ST 16 color, VIC-II HiRes, Amiga OCS NTSC LowRes 	320 x 200 	1,60 (16:10) 	64 000
+QVGA 	320 x 240 	1,33 (4:3) 	76 800
+Acorn BBC в 40-строчном режиме, Amiga OCS PAL LowRes 	320 x 256 	1,25 (5:4) 	81 920
+WQVGA 	400 x 240 	1.67 (15:9) 	96 000
+КГД (контроллер графического дисплея) ДВК 	400 x 288 	1.39 (25:18) 	115 200
+Atari ST 4 color, CGA mono, Amiga OCS NTSC HiRes 	640 x 200 	3,20 (16:5) 	128 000
+WQVGA Sony PSP Go 	480 x 272 	1,76 (30:17) 	130 560
+Вектор-06Ц, Электроника БК 	512 x 256 	2,00 (2:1) 	131 072
+	466 x 288 	1,62 (233:144) 	134 208
+HVGA 	480 x 320 	1,50 (15:10) 	153 600
+Acorn BBC в 80-строчном режиме 	640 x 256 	2,50 (5:2) 	163 840
+Amiga OCS PAL HiRes 	640 x 256 	2,50 (5:2) 	163 840
+Контейнер AVI (MPEG-4 / MP3), профиль Advanced Simple Profile Level 5 	640 x 272 	2,35 (40:17) 	174 080
+Black & white Macintosh (9") 	512 x 342 	1,50 (256:171) 	175 104
+Электроника МС 0511 	640 x 288 	2,22 (20:9) 	184 320
+Macintosh LC (12")/Color Classic 	512 x 384 	1,33 (4:3) 	196 608
+EGA (в 1984) 	640 x 350 	1,83 (64:35) 	224 000
+HGC 	720 x 348 	2,07 (60:29) 	250 560
+MDA (в 1981) 	720 x 350 	2,06 (72:35) 	252 000
+Atari ST mono, Toshiba T3100/T3200, Amiga OCS, NTSC чересстрочный 	640 x 400 	1,60 (16:10) 	256 000
+Apple Lisa 	720 x 360 	2,00 (2:1) 	259 200
+VGA (в 1987) и MCGA 	640 x 480 	1,33 (4:3) 	307 200
+Amiga OCS, PAL чересстрочный 	640 x 512 	1,25 (5:4) 	327 680
+WGA, WVGA 	800 x 480 	1,67 (5:3) 	384 000
+TouchScreen в нетбуках Sharp Mebius 	854 x 466 	1,83 (11:6) 	397 964
+FWVGA 	854 x 480 	1,78 (427:240) 	409 920
+SVGA 	800 x 600 	1,33 (4:3) 	480 000
+Apple Lisa+ 	784 x 640 	1,23 (49:40) 	501 760
+	800 x 640 	1,25 (5:4) 	512 000
+SONY XEL-1 	960 x 540 	1,78 (16:9) 	518 400
+SONY PSVITA 	960 x 544 	1,76 (30:17) 	522 240
+Dell Latitude 2100 	1024 x 576 	1,78 (16:9) 	589 824
+Apple iPhone 4 	960 x 640 	1,50 (3:2) 	614 400
+WSVGA 	1024 x 600 	1,71 (128:75) 	614 400
+	1152 x 648 	1,78 (16:9) 	746 496
+XGA (в 1990) 	1024 x 768 	1,33 (4:3) 	786 432
+	1152 x 720 	1,60 (16:10) 	829 440
+	1200 x 720 	1,67 (5:3) 	864 000
+	1152 x 768 	1,50 (3:2) 	884 736
+WXGA[2] (HD Ready) 	1280 x 720 	1,78 (16:9) 	921 600
+NeXTcube 	1120 x 832 	1,35 (35:26) 	931 840
+wXGA+ 	1280 x 768 	1,67 (5:3) 	983 040
+XGA+ 	1152 x 864 	1,33 (4:3) 	995 328
+WXGA[2] 	1280 x 800 	1,60 (16:10) 	1 024 000
+Sun 	1152 x 900 	1,28 (32:25) 	1 036 800
+WXGA[2] (HD Ready) 	1366 x 768 	1,78 (683:384) 	1 049 088
+wXGA++ 	1280 x 854 	1,50 (640:427) 	1 093 120
+SXGA 	1280 x 960 	1,33 (4:3) 	1 228 800
+UWXGA 	1600 x 768 (750) 	2,08 (25:12) 	1 228 800
+WSXGA, WXGA+ 	1440 x 900 	1,60 (16:10) 	1 296 000
+SXGA 	1280 x 1024 	1,25 (5:4) 	1 310 720
+	1536 x 864 	1,78 (16:9) 	1 327 104
+	1440 x 960 	1,50 (3:2) 	1 382 400
+WXGA++ (HD+) 	1600 x 900 	1,78 (16:9) 	1 440 000
+SXGA+ 	1400 x 1050 	1,33 (4:3) 	1 470 000
+AVCHD/«HDV 1080i» (anamorphic widescreen HD) 	1440 x 1080 	1,33 (4:3) 	1 555 200
+WSXGA 	1600 x 1024 	1,56 (25:16) 	1 638 400
+WSXGA+ 	1680 x 1050 	1,60 (16:10) 	1 764 000
+UXGA 	1600 x 1200 	1,33 (4:3) 	1 920 000
+Full HD (1080p) 	1920 x 1080 	1,77 (16:9) 	2 073 600
+	2048 x 1080 	1,90 (256:135) 	2 211 840
+WUXGA 	1920 x 1200 	1,60 (16:10) 	2 304 000
+QWXGA 	2048 x 1152 	1,78 (16:9) 	2 359 296
+	1920 x 1280 	1,50 (3:2) 	2 457 600
+	1920 x 1440 	1,33 (4:3) 	2 764 800
+QXGA 	2048 x 1536 	1,33 (4:3) 	3 145 728
+	2560 x 1080 	2,37 (64:27) 	2 764 800
+WQXGA (WQHD) 	2560 x 1440 	1,78 (16:9) 	3 686 400
+WQXGA 	2560 x 1600 	1,60 (16:10) 	4 096 000
+Apple MacBook Pro with Retina 	2880 x 1800 	1,60 (16:10) 	5 148 000
+QSXGA 	2560 x 2048 	1,25 (5:4) 	5 242 880
+WQSXGA 	3200 x 2048 	1,56 (25:16) 	6 553 600
+WQSXGA 	3280 x 2048 	1,60 (205:128 ≈ 8:5) 	6 717 440
+QUXGA 	3200 x 2400 	1,33 (4:3) 	7 680 000
+QuadHD/UHD 	3840 x 2160 	1,78 (16:9) 	8 294 400
+WQUXGA (QSXGA-W) 	3840 x 2400 	1,60 (16:10) 	9 216 000
+HSXGA 	5120 x 4096 	1,25 (5:4) 	20 971 520
+WHSXGA 	6400 x 4096 	1,56 (25:16) 	26 214 400
+HUXGA 	6400 x 4800 	1,33 (4:3) 	30 720 000
+Super Hi-Vision (UHDTV) 	7680 x 4320 	1,78 (16:9) 	33 177 600
+WHUXGA 	7680 x 4800 	1,60 (16:10) 	36 864 000 
+`;
+
+var aArgs = process.argv.slice(2);
+
+if (!aArgs[0]) {
+	console.log("need 1 argument minimum");
+	process.exit(1);
+}
+
+var aFomatsLists = [ 
+	{
+		sName: 'FORMATS LIST',
+		aList: FORMATS_LIST.split("\n")
+	},
+	{
+		sName: 'COMPUTER FORMATS LIST',
+		aList: COMPUTER_FORMATS_LIST.split("\n")
+	}
+];
+
+aFomatsLists.forEach((oFormatList) => {
+	console.log(`${oFormatList.sName}:`);
+	oFormatList.aList.forEach((sLine) => {
+		var sFindArg = aArgs[0].toLowerCase();
+		var sCurrentLine = sLine.toLowerCase();
+
+		if (!~sCurrentLine.indexOf(sFindArg) 
+			&& !~sCurrentLine.indexOf(sFindArg.replace(/\s+/g, ''))
+			&& !~sCurrentLine.replace(/\s+/g, '').indexOf(sFindArg.replace(/\s+/g, ''))
+			) {
+			return;
+		}
+
+		var aLine = sLine.split(/\s+/);
+
+		var iXIndex = aLine.indexOf("x");
+
+		if (iXIndex != -1) {
+			for (var iFreq of [30, 60]) {
+				var iSize = aLine[iXIndex-1]*aLine[iXIndex+1]*8*3*iFreq;
+				var iPackedSize = iSize;
+				var aSizeLetters = ['B', 'KB', 'MB', 'GB', 'TB', 'PB'];
+				var iSizeLetter = 0;
+
+				while (iPackedSize>1024) {
+					iPackedSize = Math.round(iPackedSize/1024)
+					iSizeLetter++;
+				}
+
+				var iMinFreq = iSize;
+				var aFreqLetters = ['Hz', 'KHz', 'MHz', 'GHz', 'THz', 'PHz'];
+				var iFreqLetter = 0;
+
+				while (iMinFreq>1000) {
+					iMinFreq = Math.round(iMinFreq/1000)
+					iFreqLetter++;
+				}
+
+				var sName = '';
+
+				for (var i=0; i<iXIndex-1; i++) {
+					sName += aLine[i]+' ';
+				}
+
+				console.log(`${sName} ${iFreq}Hz ${iSize}B ${iPackedSize}${aSizeLetters[iSizeLetter]} ${iMinFreq}${aFreqLetters[iFreqLetter]}`);
+			}
+		}
+	});
+});
+

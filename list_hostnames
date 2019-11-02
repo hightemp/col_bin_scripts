@@ -1,0 +1,26 @@
+#!/usr/bin/env php
+<?php
+
+$aOptions = getopt("f:i");
+
+ob_start();
+system("arp -n -a");
+$sArp = ob_get_clean();
+
+if (preg_match_all("/\d+\.\d+\.\d+\.\d+/m", $sArp, $aMatches)) {
+	foreach ($aMatches[0] as $sIP) {
+		ob_start();
+		$sHost = system("host $sIP");
+		ob_end_clean();
+
+		if (preg_match("/([\w\d_.-]+)\.$/", $sHost, $aHostNameMatch)) {
+			if (!isset($aOptions["f"]) || (isset($aOptions["f"]) && $aOptions["f"]==$aHostNameMatch[1])) {
+				if (isset($aOptions["i"])) {
+					echo $sIP, "\n";
+				} else {
+					echo $sIP, " ", $aHostNameMatch[1], "\n";
+				}
+			}
+		}
+	}
+}
