@@ -1,2 +1,12 @@
 #!/bin/bash
-for (( i=0; i<255; i++ )); do ip="192.168.1.$i"; c=$(ping -c 1 $ip); if [ "$?" -eq "0" ]; then echo "[+] $ip $(host $ip)"; fi; done;
+
+if [ "$1" != "" ]; then
+	c=$(ping -c 1 $1); 
+	if [ "$?" -eq "0" ]; then 
+		echo "[+] $1 $(host $1)"; 
+	fi; 
+fi
+for (( i=0; i<255; i++ )); do 
+	ip="192.168.1.$i";
+	nohup $0 $ip &
+done;

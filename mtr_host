@@ -1,0 +1,4 @@
+#!/bin/bash
+
+sudo mtr -P 80 -i 0.2 -rwc 10 $1
+
