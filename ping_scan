@@ -1,0 +1,2 @@
+#!/bin/bash
+for (( i=0; i<255; i++ )); do ip="192.168.1.$i"; c=$(ping -c 1 $ip); if [ "$?" -eq "0" ]; then echo "[+] $ip $(host $ip)"; fi; done;
