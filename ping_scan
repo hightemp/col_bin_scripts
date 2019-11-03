@@ -1,12 +1,14 @@
 #!/bin/bash
 
 if [ "$1" != "" ]; then
-	c=$(ping -c 1 $1); 
+	#c=$()
+	ping -c 1 $1 > /dev/null 
 	if [ "$?" -eq "0" ]; then 
 		echo "[+] $1 $(host $1)"; 
-	fi; 
-fi
-for (( i=0; i<255; i++ )); do 
-	ip="192.168.1.$i";
-	nohup $0 $ip &
-done;
+	fi;	
+else
+	for (( i=1; i<255; i++ )); do 
+		ip="192.168.1.$i";
+		$0 $ip
+	done;
+fi;
