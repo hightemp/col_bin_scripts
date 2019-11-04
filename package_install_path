@@ -1,0 +1,3 @@
+#!/bin/bash
+
+sudo dpkg -L $1
