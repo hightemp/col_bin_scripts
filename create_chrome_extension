@@ -1,0 +1,41 @@
+#!/bin/bash
+
+echo "[!] Make sure that yo, gulp and bower was installed on your system" 
+for p in yo gulp-cli bower generator-chrome-extension; do
+	npm list -g $p > /dev/null
+
+	if [ $? -ne 0 ]; then
+		echo "[!] Installing $p"
+		sudo npm install -g $p > /dev/null
+	else
+		echo "[+] Found $p"
+	fi
+done
+ 
+for p in yo gulp bower; do
+	which $p > /dev/null
+
+	if [ $? -ne 0 ]; then
+		echo "[E] $p not found"
+		exit 1
+	fi
+done
+
+echo "[!] Make a new directory, and cd get into it:" 
+mkdir $1 && cd $_
+ 
+echo "[!] Generate a new project"
+yo chrome-extension
+
+echo "[!] Installing packages .."
+npm install > /dev/null
+bower install > /dev/null
+
+echo "[!] Transform updated source written by ES2015 (default option)" 
+gulp babel > /dev/null
+ 
+# or Using watch to update source continuously 
+# gulp watch
+ 
+echo "[!] Make a production version extension"
+gulp build

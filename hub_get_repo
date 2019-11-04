@@ -1,0 +1,25 @@
+#!/bin/bash
+
+w=$(which hub)
+
+cd /home/hightemp/FromRemoteRepos > /dev/null
+basename=$(basename $1)
+filename=${basename%.*}
+path="$(pwd)/$filename"
+
+if [ $? -eq 0 ]; then
+	c=$(hub clone $1 > /dev/null)
+else
+	w=$(which git)
+	if [ $? -eq 0 ]; then
+		c=$(git clone $1 > /dev/null)
+	fi
+fi
+
+if [ $? -eq 0 ]; then
+	echo "[+] Cloned into $path"
+else
+	echo "[-] Error. Repo path: $path"
+fi
+
+cd - > /dev/null

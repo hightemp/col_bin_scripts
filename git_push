@@ -1,0 +1,6 @@
+#!/bin/bash
+
+branch=$( git rev-parse --symbolic-full-name --abbrev-ref HEAD ); 
+git add .; 
+git commit -am 'update'; 
+git push --set-upstream origin $branch;
