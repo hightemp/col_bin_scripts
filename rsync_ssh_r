@@ -1,0 +1,3 @@
+#!/bin/bash
+
+rsync -r -z -P -e ssh $1 $2
