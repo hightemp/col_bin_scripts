@@ -31,8 +31,7 @@ fi
 which apt > /dev/null
 
 if [ $? -eq 0 ]; then
-	c=$(sudo grep -r Package /var/lib/apt/lists/*) 
-	echo "$c" | awk '{print $2;}' | grep $1 > /dev/null
+	sudo apt list --installed | grep $1 # > /dev/null
 	exit $?
 fi
 
