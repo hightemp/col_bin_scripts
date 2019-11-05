@@ -2,7 +2,9 @@
 
 check_installed_package $1
 
+echo "[!] $? install_package $1"
 if [ $? -ne 0 ]; then
+	echo "[!] install_package $1"
 	install_package $1
 fi
 
