@@ -2,4 +2,5 @@
 
 ssh_check_bin_dir $1
 
+ssh $1 "echo \$PATH"
 ssh $1 "hash_sum_of_dir $2 $3"
