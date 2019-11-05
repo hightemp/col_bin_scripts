@@ -34,6 +34,8 @@ fi
 
 which apt > /dev/null
 
+echo "apt $?"
+
 if [ $? -eq 0 ]; then
 	echo "[!] installing $1"
 	sudo apt-get -y install $1 > /dev/null
