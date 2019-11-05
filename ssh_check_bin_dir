@@ -4,6 +4,14 @@ ssh $1 "echo \$PATH | grep '~/bin'"
 
 if [ $? -ne 0 ]; then
 	ssh $1 "echo 'PATH=\$PATH:~/bin' >> ~/.bashrc"
+	ssh $1 "echo 'PATH=\$PATH:~/bin' >> ~/.profile"
+fi
+
+ssh $1 "echo \$PATH | grep '~/bin'"
+
+if [ $? -ne 0 ]; then
+	echo "[E] ~/bin not found in PATH"
+	exit 1
 fi
 
 ssh $1 "if [ -d ~/bin ]; then exit 0; else exit 1; fi"
