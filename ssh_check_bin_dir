@@ -1,13 +1,13 @@
 #!/bin/bash
 
-ssh $1 "echo \$PATH | grep '~/bin'"
+ssh $1 ". ~/.bashrc; echo \$PATH | grep '~/bin'"
 
 if [ $? -ne 0 ]; then
 	ssh $1 "echo 'export PATH=\$PATH:~/bin' >> ~/.bashrc"
 	ssh $1 "echo 'export PATH=\$PATH:~/bin' >> ~/.profile"
 fi
 
-ssh $1 "echo \$PATH | grep '~/bin'"
+ssh $1 ". ~/.bashrc; echo \$PATH | grep '~/bin'"
 
 if [ $? -ne 0 ]; then
 	echo "[E] ~/bin not found in PATH"
