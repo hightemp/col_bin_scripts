@@ -15,16 +15,16 @@ if [ $? -ne 0 ]; then
 		ssh $1 "echo 'export PATH=\$PATH:$bp' >> ~/.profile"
 		# ssh $1 "echo 'export PATH=\$PATH:$bp' >> ~/.bash_profile"
 	fi
-else
-	echo "[+] $bp found in PATH"
+
+	ssh $1 "$p echo \$PATH | grep '$bp' > /dev/null"
+
+	if [ $? -ne 0 ]; then
+		echo "[E] $bp not found in PATH"
+		exit 1
+	fi
 fi
 
-ssh $1 "$p echo \$PATH | grep '$bp' > /dev/null"
-
-if [ $? -ne 0 ]; then
-	echo "[E] $bp not found in PATH"
-	exit 1
-fi
+echo "[+] $bp found in PATH"
 
 ssh $1 "if [ -d $bp ]; then exit 0; else exit 1; fi"
 
