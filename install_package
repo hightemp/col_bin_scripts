@@ -3,36 +3,41 @@
 which yum > /dev/null
 
 if [ $? -eq 0 ]; then
+	echo "[!] installing $1"
 	sudo yum -y install $1 > /dev/null
 	exit $?
-else
-	which dnf > /dev/null
-
-	if [ $? -eq 0 ]; then
-		sudo dnf -y install $1 > /dev/null
-		exit $?
-	else
-		which zypper > /dev/null
-
-        	if [ $? -eq 0 ]; then
-			sudo zypper -y install $1 > /dev/null
-			exit $?
-		else
-			which paclist > /dev/null
-			
-			if [ $? -eq 0 ]; then
-				sudo pacman --noconfirm -S $1 > /dev/null
-				exit $?
-			else
-				which apt > /dev/null
-				
-				if [ $? -eq 0 ]; then
-					sudo apt-get -y install $1 > /dev/null
-					exit $?
-				else
-					exit 44
-				fi
-			fi
-		fi	
-	fi
 fi
+
+which dnf > /dev/null
+
+if [ $? -eq 0 ]; then
+	echo "[!] installing $1"
+	sudo dnf -y install $1 > /dev/null
+	exit $?
+fi
+
+which zypper > /dev/null
+
+if [ $? -eq 0 ]; then
+	echo "[!] installing $1"
+	sudo zypper -y install $1 > /dev/null
+	exit $?
+fi
+
+which paclist > /dev/null
+
+if [ $? -eq 0 ]; then
+	echo "[!] installing $1"
+	sudo pacman --noconfirm -S $1 > /dev/null
+	exit $?
+fi
+
+which apt > /dev/null
+
+if [ $? -eq 0 ]; then
+	echo "[!] installing $1"
+	sudo apt-get -y install $1 > /dev/null
+	exit $?
+fi
+
+exit 44
