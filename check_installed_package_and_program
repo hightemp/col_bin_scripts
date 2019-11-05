@@ -1,9 +1,9 @@
 #!/bin/bash
 
-check_installed_package $1 > /dev/null
+check_installed_package $1
 
 if [ $? -ne 0 ]; then
-	install_package $1 > /dev/null
+	install_package $1
 fi
 
 which $2 > /dev/null
