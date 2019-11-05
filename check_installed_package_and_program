@@ -1,14 +1,12 @@
 #!/bin/bash
 
-check_installed_package $1
+check_installed_package $1 > /dev/null
 
-echo "[!] $? install_package $1"
 if [ $? -ne 0 ]; then
-	echo "[!] install_package $1"
-	install_package $1
+	install_package $1 > /dev/null
 fi
 
-which $2
+which $2 > /dev/null
 
 if [ $? -ne 0 ]; then
 	echo "[!] $2 not found"

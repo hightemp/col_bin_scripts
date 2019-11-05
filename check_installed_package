@@ -31,7 +31,7 @@ fi
 which apt > /dev/null
 
 if [ $? -eq 0 ]; then
-	sudo apt list --installed | grep $1 # > /dev/null
+	sudo apt list --installed | grep $1 > /dev/null
 	exit $?
 fi
 
