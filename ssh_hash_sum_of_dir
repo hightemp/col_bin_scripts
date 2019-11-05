@@ -6,5 +6,4 @@ if [ $? -ne 0 ]; then
 	exit 1
 fi
 
-ssh $1 "echo \$PATH"
-ssh $1 "hash_sum_of_dir $2 $3"
+ssh $1 ". ~/.bashrc; hash_sum_of_dir $2 $3"
