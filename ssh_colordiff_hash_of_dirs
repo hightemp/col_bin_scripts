@@ -1,17 +1,6 @@
 #!/bin/bash
 
-check_installed_package colordiff
-
-if [ $? -ne 0 ]; then
-	install_package colordiff
-fi
-
-which colordiff
-
-if [ $? -ne 0 ]; then
-	echo "[!] colordiff not found"
-	exit 1
-fi
+source check_installed_package_and_program colordiff colordiff
 
 f1=$(mktemp)
 f2=$(mktemp)
