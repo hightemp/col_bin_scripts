@@ -1,9 +1,9 @@
 #!/bin/bash
 
-ssh_check_bin_dir $1
+source ssh_check_bin_dir $1
 
 if [ $? -ne 0 ]; then
     exit 1
 fi
 
-ssh $1 ". ~/.bashrc; hash_sum_of_each_item_in_dir $2 $3"
+ssh $1 "$p hash_sum_of_each_item_in_dir $2 $3"
