@@ -1,0 +1,7 @@
+#!/bin/bash
+
+cd $1
+
+for f in $(ls); do
+	printf "%-30s %-30s\n" $f $(hash_sum_of_dir $f $2)
+done
