@@ -1,3 +1,15 @@
 #!/bin/bash
 
-ssh $1 "echo "
+ssh $1 "echo \$PATH | grep '~/bin'"
+
+if [ $? -ne 0 ]; then
+	ssh $1 "echo 'PATH=\$PATH:~/bin' >> ~/.bashrc"
+fi
+
+ssh $1 "if [ -d ~/bin ]; then exit 0; else exit 1; fi"
+
+if [ $? -ne 0 ]; then
+        scp -r ~/bin $1:~/
+fi
+
+
