@@ -1,0 +1,3 @@
+#!/bin/bash
+
+ssh $1 "hash_sum_of_each_item_in_dir $2 $3"

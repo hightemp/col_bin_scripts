@@ -3,35 +3,34 @@
 which yum > /dev/null
 
 if [ $? -eq 0 ]; then
-	sudo yum list installed | grep $1 > /dev/null
+	sudo yum -y install $1 > /dev/null
 	exit $?
 else
 	which dnf > /dev/null
 
 	if [ $? -eq 0 ]; then
-		sudo dnf list installed | grep $1 > /dev/null
+		sudo dnf -y install $1 > /dev/null
 		exit $?
 	else
 		which zypper > /dev/null
 
         	if [ $? -eq 0 ]; then
-			sudo zypper search -ir "$1" > /dev/null
+			sudo zypper -y install $1 > /dev/null
 			exit $?
 		else
 			which paclist > /dev/null
 			
 			if [ $? -eq 0 ]; then
-				sudo paclist community | grep $1 > /dev/null
+				sudo pacman --noconfirm -S $1 > /dev/null
 				exit $?
 			else
 				which apt > /dev/null
 				
 				if [ $? -eq 0 ]; then
-					c=$(sudo grep -r Package /var/lib/apt/lists/*) 
-					echo "$c" | awk '{print $2;}' | grep $1 > /dev/null
+					sudo apt-get -y install $1 > /dev/null
 					exit $?
 				else
-					exit 33
+					exit 44
 				fi
 			fi
 		fi	

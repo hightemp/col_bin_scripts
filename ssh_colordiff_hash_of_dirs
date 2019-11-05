@@ -1,0 +1,22 @@
+#!/bin/bash
+
+check_installed_package colordiff
+
+if [ $? -ne 0 ]; then
+	install_package colordiff
+fi
+
+which colordiff
+
+if [ $? -ne 0 ]; then
+	echo "[!] colordiff not found"
+	exit 1
+fi
+
+f1=$(mktemp)
+f2=$(mktemp)
+
+echo "$(ssh_hash_sum_of_each_item_in_dir $1 $2)" > $f1
+echo "$(hash_sum_of_each_item_in_dir $3)" > $f2
+
+colordiff $f1 $f2
