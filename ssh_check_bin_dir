@@ -15,7 +15,7 @@ else
 	echo "[+] ~/bin found in PATH"
 fi
 
-ssh $1 ". ~/.bashrc; echo \$PATH | grep '~/bin'"
+ssh $1 "source ~/.bashrc; echo \$PATH | grep '~/bin'"
 
 if [ $? -ne 0 ]; then
 	echo "[E] ~/bin not found in PATH"
