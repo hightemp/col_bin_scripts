@@ -13,7 +13,7 @@ if [ $? -ne 0 ]; then
 		echo "[!] adding bin path to ~/.bashrc ~/.profile"
 		ssh $1 "echo 'export PATH=\$PATH:$bp' >> ~/.bashrc"
 		ssh $1 "echo 'export PATH=\$PATH:$bp' >> ~/.profile"
-		ssh $1 "echo 'export PATH=\$PATH:$bp' >> ~/.bash_profile"
+		# ssh $1 "echo 'export PATH=\$PATH:$bp' >> ~/.bash_profile"
 	fi
 else
 	echo "[+] $bp found in PATH"
