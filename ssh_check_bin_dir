@@ -5,7 +5,7 @@ ssh $1 ". ~/.bashrc; echo \$PATH | grep '~/bin'"
 
 if [ $? -ne 0 ]; then
 	echo "[!] ~/bin not found in PATH, checking ~/.bashrc"
-	ssh $1 "cat ~/.bashrc | grep '$l'"
+	ssh $1 "echo \$PATH; source ~/.bashrc; echo \$PATH; cat ~/.bashrc | grep '$l'"
 	if [ $? -ne 0 ]; then
 		echo "[!] adding bin path to ~/.bashrc ~/.profile"
 		ssh $1 "echo 'export PATH=\$PATH:~/bin' >> ~/.bashrc"
