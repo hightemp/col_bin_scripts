@@ -4,11 +4,11 @@ bp="~/bin"
 bp=$(ssh $1 "echo \$(readlink -f $bp)")
 l="export PATH=\$PATH:$bp"
 p=". ~/.profile;"
-ssh $1 "$p echo \$PATH | grep '$bp'"
+ssh $1 "$p echo \$PATH | grep '$bp' > /dev/null"
 
 if [ $? -ne 0 ]; then
 	echo "[!] $bp not found in PATH, checking ~/.bashrc"
-	ssh $1 "$p cat ~/.bashrc | grep '$l'"
+	ssh $1 "$p cat ~/.bashrc | grep '$l' > /dev/null"
 	if [ $? -ne 0 ]; then
 		echo "[!] adding bin path to ~/.bashrc ~/.profile"
 		ssh $1 "echo 'export PATH=\$PATH:$bp' >> ~/.bashrc"
@@ -16,10 +16,10 @@ if [ $? -ne 0 ]; then
 		ssh $1 "echo 'export PATH=\$PATH:$bp' >> ~/.bash_profile"
 	fi
 else
-	echo "[+] ~/bin found in PATH"
+	echo "[+] $bp found in PATH"
 fi
 
-ssh $1 "$p echo \$PATH | grep '$bp'"
+ssh $1 "$p echo \$PATH | grep '$bp' > /dev/null"
 
 if [ $? -ne 0 ]; then
 	echo "[E] $bp not found in PATH"
