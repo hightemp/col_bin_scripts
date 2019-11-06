@@ -24,7 +24,7 @@ if [ $? -ne 0 ]; then
 	fi
 fi
 
-# echo "[+] $bp found in PATH"
+echo "[+] $bp found in PATH"
 
 ssh $1 "if [ -d $bp ]; then exit 0; else exit 1; fi"
 
