@@ -5,9 +5,9 @@ source check_installed_package_and_program colordiff colordiff
 f1=$(mktemp)
 f2=$(mktemp)
 
-echo "[!] calculating hash for $1 $2"
+echo "[!] calculating hash for $1 $2 in $f1"
 echo "$(ssh_hash_sum_of_each_item_in_dir $1 $2)" > $f1
-echo "[!] calculating hash for $3"
+echo "[!] calculating hash for $3 in $f2"
 echo "$(hash_sum_of_each_item_in_dir $3)" > $f2
 
 colordiff $f1 $f2
