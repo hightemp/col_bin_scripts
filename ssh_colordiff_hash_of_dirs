@@ -11,3 +11,11 @@ echo "[!] calculating hash for $3 in $f2"
 echo "$(hash_sum_of_each_item_in_dir $3)" > $f2
 
 colordiff $f1 $f2
+
+r=$?
+
+if [ $r -eq 0 ]; then
+	echo "[+] There is no difference"
+fi
+
+exit $r
