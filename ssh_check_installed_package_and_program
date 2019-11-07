@@ -2,13 +2,13 @@
 
 source ssh_check_bin_dir $1
 
-ssh $1 "check_installed_package $2"
+ssh $1 "$p check_installed_package $2"
 
 if [ $? -ne 0 ]; then
-	ssh $1 "install_package $2"
+	ssh $1 "$p install_package $2"
 fi
 
-ssh $1 "which $3 > /dev/null"
+ssh $1 "$p which $3 > /dev/null"
 
 if [ $? -ne 0 ]; then
 	echo "[!] $3 not found"

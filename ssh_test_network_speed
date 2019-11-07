@@ -1,12 +1,12 @@
 #!/bin/bash
 
-p="iperf3"
+pr="iperf3"
 
-source ssh_check_installed_package_and_program $1 $p $p
+source ssh_check_installed_package_and_program $1 $pr $pr
 
 ip=$(get_local_ip)
-so=$(iperf3 -s -p 5002 &)
+so=$($pr -s -p 5002 &)
 
-ssh $1 "iperf3 -c -p 5002 $ip"
+ssh $1 "$p $pr -c -p 5002 $ip"
 
-pkill iperf3
+pkill $pr
