@@ -2,7 +2,7 @@
 
 p="iperf3"
 
-ssh_check_installed_package_and_program $1 $p $p
+source ssh_check_installed_package_and_program $1 $p $p
 
 ip=$(get_local_ip)
 so=$(iperf3 -s -p 5002 &)
