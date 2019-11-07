@@ -1,5 +1,7 @@
 #!/bin/bash
 
+source ssh_check_bin_dir $1
+
 source check_installed_package_and_program colordiff colordiff
 
 f1=$(mktemp)
