@@ -1,14 +1,16 @@
 #!/bin/bash
 
+source ssh_check_bin_dir $1
+
 ssh $1 "check_installed_package $2"
 
 if [ $? -ne 0 ]; then
-	install_package $1
+	ssh $1 "install_package $2"
 fi
 
-which $2 > /dev/null
+ssh $1 "which $3 > /dev/null"
 
 if [ $? -ne 0 ]; then
-	echo "[!] $2 not found"
+	echo "[!] $3 not found"
 	exit 1
 fi
