@@ -29,7 +29,9 @@ echo "[+] $bp found in PATH"
 ssh $1 "if [ -d $bp ]; then exit 0; else exit 1; fi"
 
 if [ $? -ne 0 ]; then
-        scp -r ~/bin $1:~/
+    scp -r ~/bin $1:~/
+else
+	ssh $1 "cd bin; git pull"
 fi
 
 
