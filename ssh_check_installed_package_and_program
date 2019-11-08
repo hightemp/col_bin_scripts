@@ -1,11 +1,9 @@
 #!/bin/bash
 
 args=( "$@" )
-help=( "user@10.0.0.1" "root_password" "package name" "program name" )
+help=( "user@10.0.0.1" "ssh root password" "package name" "program name" )
 
 source check_args 'args[@]' 'help[@]'
-
-exit 0
 
 source ssh_check_bin_dir $1
 

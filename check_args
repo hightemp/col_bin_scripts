@@ -3,12 +3,12 @@
 a=("${!1}")
 h=("${!2}")
 
-echo $h
-
 if [ ${#a[@]} -ne ${#h[@]} ]; then
 	l=${#h[@]}
 
 	for (( i=1; i<${l}+1; i++ )); do
-  		echo $i " / " ${l} " : " ${h[$i-1]}
+  		echo $i "/" ${l} ": " ${h[$i-1]}
 	done
+
+	exit 1
 fi
