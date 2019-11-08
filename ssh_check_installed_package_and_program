@@ -3,6 +3,10 @@
 args=( "$@" )
 help=( "user@10.0.0.1" "root_password" "package name" "program name" )
 
+source check_args "args[@]" "help[@]"
+
+exit 0
+
 source ssh_check_bin_dir $1
 
 ssh $1 "$p check_installed_package $3"
