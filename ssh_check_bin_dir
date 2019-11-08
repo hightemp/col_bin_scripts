@@ -1,9 +1,12 @@
 #!/bin/bash
 
+# $1 user@10.0.0.1
+# $2 root_password 
+
 bp="~/bin"
 bp=$(ssh $1 "echo \$(readlink -f $bp)")
 l="export PATH=\$PATH:$bp"
-p=". ~/.profile;"
+p=". ~/.profile;export PASSWORD='$2';"
 ssh $1 "$p echo \$PATH | grep '$bp' > /dev/null"
 
 if [ $? -ne 0 ]; then
