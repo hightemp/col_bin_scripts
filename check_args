@@ -3,7 +3,9 @@
 args=("${!1}")
 help=("${!2}")
 
-if [ $args[@] -ne $help[@] ]; then
+echo $help
+
+if [ ${#args[@]} -ne ${#help[@]} ]; then
 	arraylength=${#help[@]}
 
 	for (( i=1; i<${arraylength}+1; i++ )); do
