@@ -3,7 +3,7 @@
 args=( "$@" )
 help=( "user@10.0.0.1" "root_password" "package name" "program name" )
 
-source check_args "${args[@]}" "${help[@]}"
+source check_args 'args[@]' 'help[@]'
 
 exit 0
 
