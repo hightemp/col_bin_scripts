@@ -1,0 +1,12 @@
+#!/bin/bash
+
+args=("${!1}")
+help=("${!2}")
+
+if [ $args[@] -ne $help[@] ]; then
+	arraylength=${#help[@]}
+
+	for (( i=1; i<${arraylength}+1; i++ )); do
+  		echo $i " / " ${arraylength} " : " ${help[$i-1]}
+	done
+fi
