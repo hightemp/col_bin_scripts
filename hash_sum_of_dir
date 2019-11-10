@@ -1,5 +1,10 @@
 #!/bin/bash
 
+args=( "$@" )
+help=( "file path" )
+
+source check_args 'args[@]' 'help[@]'
+
 h="sha1sum"
 
 if [ "$2" != "" ]; then
