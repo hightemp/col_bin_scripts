@@ -1,7 +1,8 @@
 #!/bin/bash
 
 args=( "$@" )
-help=( "user@10.0.0.1" "ssh root password" )
+help=( "user@10.0.0.1" "ssh root password" "remote path" )
+# $4 - hash method
 
 source check_args 'args[@]' 'help[@]'
 
@@ -11,4 +12,4 @@ if [ $? -ne 0 ]; then
     exit 1
 fi
 
-ssh $1 "$p hash_sum_of_each_item_in_dir $2 $3"
+ssh $1 "$p hash_sum_of_each_item_in_dir $3 $4"
