@@ -5,7 +5,7 @@ help=( "user@10.0.0.1" "ssh root password" "package name" "program name" )
 
 source check_args 'args[@]' 'help[@]'
 
-source ssh_check_bin_dir $1
+source ssh_check_bin_dir $1 $2
 
 ssh $1 "$p check_installed_package $3"
 
