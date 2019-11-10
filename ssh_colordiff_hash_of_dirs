@@ -1,7 +1,7 @@
 #!/bin/bash
 
 args=( "$@" )
-help=( "user@10.0.0.1" "ssh root password" )
+help=( "user@10.0.0.1" "ssh root password" "remote path" "local path" )
 
 source check_args 'args[@]' 'help[@]'
 
@@ -12,10 +12,10 @@ source check_installed_package_and_program colordiff colordiff
 f1=$(mktemp)
 f2=$(mktemp)
 
-echo "[!] calculating hash for $1 $2 in $f1"
-echo "$(ssh_hash_sum_of_each_item_in_dir $1 $2)" > $f1
-echo "[!] calculating hash for $3 in $f2"
-echo "$(hash_sum_of_each_item_in_dir $3)" > $f2
+echo "[!] calculating hash for $1 $3 in $f1"
+echo "$(ssh_hash_sum_of_each_item_in_dir $1 $2 $3)" > $f1
+echo "[!] calculating hash for $4 in $f2"
+echo "$(hash_sum_of_each_item_in_dir $4)" > $f2
 
 colordiff $f1 $f2
 
