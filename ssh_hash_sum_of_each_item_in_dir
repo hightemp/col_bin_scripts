@@ -1,6 +1,11 @@
 #!/bin/bash
 
-source ssh_check_bin_dir $1
+args=( "$@" )
+help=( "user@10.0.0.1" "ssh root password" )
+
+source check_args 'args[@]' 'help[@]'
+
+source ssh_check_bin_dir $1 $2
 
 if [ $? -ne 0 ]; then
     exit 1
