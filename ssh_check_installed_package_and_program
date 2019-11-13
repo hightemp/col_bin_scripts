@@ -1,16 +1,21 @@
 #!/bin/bash
 
-source ssh_check_bin_dir $1
+args=( "$@" )
+help=( "user@10.0.0.1" "ssh root password" "package name" "program name" )
 
-ssh $1 "$p check_installed_package $2"
+source check_args 'args[@]' 'help[@]'
+
+source ssh_check_bin_dir $1 $2
+
+ssh $1 "$p check_installed_package $3"
 
 if [ $? -ne 0 ]; then
-	ssh $1 "$p install_package $2"
+	ssh $1 "$p install_package $3"
 fi
 
-ssh $1 "$p which $3 > /dev/null"
+ssh $1 "$p which $4 > /dev/null"
 
 if [ $? -ne 0 ]; then
-	echo "[!] $3 not found"
+	echo "[!] $4 not found"
 	exit 1
 fi

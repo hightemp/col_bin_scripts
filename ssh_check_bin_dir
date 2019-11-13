@@ -1,9 +1,14 @@
 #!/bin/bash
 
+args=( "$@" )
+help=( "user@10.0.0.1" "ssh root password" )
+
+source check_args 'args[@]' 'help[@]'
+
 bp="~/bin"
 bp=$(ssh $1 "echo \$(readlink -f $bp)")
 l="export PATH=\$PATH:$bp"
-p=". ~/.profile;"
+p=". ~/.profile;export PASSWORD='$2';"
 ssh $1 "$p echo \$PATH | grep '$bp' > /dev/null"
 
 if [ $? -ne 0 ]; then

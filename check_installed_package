@@ -3,35 +3,35 @@
 which yum > /dev/null
 
 if [ $? -eq 0 ]; then
-	sudo yum list installed | grep $1 > /dev/null
+	echo $PASSWORD | sudo -S yum list installed | grep $1 > /dev/null
 	exit $?
 fi
 
 which dnf > /dev/null
 
 if [ $? -eq 0 ]; then
-	sudo dnf list installed | grep $1 > /dev/null
+	echo $PASSWORD | sudo -S dnf list installed | grep $1 > /dev/null
 	exit $?
 fi
 
 which zypper > /dev/null
 
 if [ $? -eq 0 ]; then
-	sudo zypper search -ir "$1" > /dev/null
+	echo $PASSWORD | sudo -S zypper search -ir "$1" > /dev/null
 	exit $?
 fi
 
 which paclist > /dev/null
 
 if [ $? -eq 0 ]; then
-	sudo paclist community | grep $1 > /dev/null
+	echo $PASSWORD | sudo -S paclist community | grep $1 > /dev/null
 	exit $?
 fi
 
 which apt > /dev/null
 
 if [ $? -eq 0 ]; then
-	sudo apt list --installed | grep $1 > /dev/null
+	echo $PASSWORD | sudo -S apt list --installed | grep $1 > /dev/null
 	exit $?
 fi
 

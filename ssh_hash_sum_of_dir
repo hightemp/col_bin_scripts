@@ -1,9 +1,13 @@
 #!/bin/bash
 
-source ssh_check_bin_dir $1
+args=( "$@" )
+help=( "user@10.0.0.1" "ssh root password" "remote path" )
+# $4 - hash method
+
+source ssh_check_bin_dir $1 $2
 
 if [ $? -ne 0 ]; then
 	exit 1
 fi
 
-ssh $1 "$p hash_sum_of_dir $2 $3"
+ssh $1 "$p hash_sum_of_dir $3 $4"
