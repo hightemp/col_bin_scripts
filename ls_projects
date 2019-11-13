@@ -1,0 +1,39 @@
+#!/bin/bash
+
+source colors
+
+pg=( "lib" "ext" "app" "capp" "wapp" "col" "doc" )
+pgn=( "Libraries" "Extensions" "Applications(GUI)" "Console applications" "Web applications" "Collections" "Documentation & documents" )
+pd=""
+
+if [ "$1" = "-g" ]; then
+	f_g="1"
+fi
+
+for (( i=0; i<${#pg[@]}; i++ )); do
+	if [ "$f_g" = "1" ]; then
+		echo -e "${LIGHTBLUE}${pgn[$i]}:${NOCOLOR}"
+		pd="  "
+	fi
+
+	l=$(ls | grep -Eo "^${pg[$i]}.*")
+
+	for li in $l; do
+		has_git=""
+		has_github=""
+		if [ "$f_g" = "1" ]; then
+			if [ -d "$li/.git" ];then
+				has_git=" ${GREEN}[git]${NOCOLOR}"
+				git_config=$(cat "$li/.git/config")
+				echo -e "$git_config" | grep "github.com" > /dev/null
+				if [ $? -eq 0 ]; then
+					has_github=" ${GREEN}[github]${NOCOLOR}"
+				fi
+			fi
+			li="${YELLOW}$li${NOCOLOR}"
+		fi
+
+		echo -e "$pd$li$has_git$has_github"
+	done
+done
+
