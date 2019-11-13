@@ -1,0 +1,12 @@
+#!/bin/bash
+
+git init
+
+if [ "$1" = "" ]; then
+	rn=$(basename $(pwd))
+	git remote add origin "git@github.com:$BS_GIT_USERNAME/$rn.git"
+else
+	git remote add origin $1
+fi
+
+git_push
