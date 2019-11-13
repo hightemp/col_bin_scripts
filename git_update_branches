@@ -1,0 +1,9 @@
+#!/bin/bash
+
+current_branch=$(git_branch)
+
+for branch in $(git for-each-ref --format='%(refname:short)' 'refs/heads/alt*'); do
+  git checkout $branch && git merge --no-edit master
+done
+
+git checkout $current_branch
