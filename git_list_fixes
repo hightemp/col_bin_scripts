@@ -1,0 +1,16 @@
+#!/bin/bash
+
+source colors
+
+l=$(git branch -a --no-merged master | grep -Eo "^[ ]*(fix[0-9]+)" | sed "s# ##g")
+
+for b in $l; do
+	if [ "$1" == "-c" ]; then
+		echo -e "${LIGHTBLUE}[$b]${NOCOLOR}"
+		git log --walk-reflogs --pretty=format:"%s" $b | grep ".*"
+		# git log $b --not $( git show-ref --heads | cut -d' ' -f2 | grep -v "^$b" )
+		# git log --pretty=format:"%s" $b
+	else
+		echo $b
+	fi
+done
