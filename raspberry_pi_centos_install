@@ -1,0 +1,24 @@
+#!/bin/bash
+
+mmdevice="/dev/mmcblk0"
+
+if [ "$1" != "" ]; then
+	mmdevice="$1"
+fi
+
+if [ -f $mmdevice ]; then
+	echo "[E] devie '$mmdevice' not found"
+	exit 1
+fi
+
+source check_internet
+
+if [ $? -ne 0 ]; then
+	echo "[E] you are offline"
+	exit 2
+fi
+
+xzcat CentOS-Userland-7-armv7hl-RaspberryPI-Minimal-1810-sda.raw.xz | dd of=$mmdevice bs=4M
+sync
+
+
