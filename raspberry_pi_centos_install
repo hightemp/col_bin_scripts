@@ -3,16 +3,26 @@
 mmdevice="/dev/mmcblk0"
 ds=""
 
-if [ "$1" != "" ]; then
-	mmdevice="$1"
-fi
+for i in "$@"
+do
+case $i in
+    -w*|--write-image*)
+    	F_WRITE_IMAGE="1"
+    	shift
+    ;;
+    *)
+    	mmdevice="$i"
+	shift
+    ;;
+esac
+done
 
-if [ -f $mmdevice ]; then
-	echo "[E] devie '$mmdevice' not found"
+if [ ! -b $mmdevice ]; then
+	echo "[E] device '$mmdevice' not found"
 	exit 1
 fi
 
-if [ $mmdevice =~ "[0-9]$" ]; then
+if [[ $mmdevice =~ [0-9]$ ]]; then
 	ds="p"
 fi	
 
@@ -23,32 +33,51 @@ if [ $? -ne 0 ]; then
 	exit 2
 fi
 
-xzcat CentOS-Userland-7-armv7hl-RaspberryPI-Minimal-1810-sda.raw.xz | dd of=$mmdevice bs=4M
-sync
+# http://mirrors.powernet.com.ru/centos-altarch/7.7.1908/isos/armhfp/
 
-mount ${mmdevice}${ds}3 /mnt
+cd /tmp
+
+osf="CentOS-Userland-7-armv7hl-RaspberryPI-Minimal-1908-sda.raw.xz"
+
+if [ ! -f $osf ]; then
+	wget http://mirrors.powernet.com.ru/centos-altarch/7.7.1908/isos/armhfp/$osf
+fi
+
+sudo sh -c "xzcat $osf | dd status=progress of=$mmdevice bs=4M"
+sudo sync
+
+if [ "$F_WRITE_IMAGE" == "1" ]; then
+	exit 0
+fi
+
+sudo ls ${mmdevice}*
+sudo partx -a ${mmdevice}
+sudo ls ${mmdevice}*
+
+sudo mount ${mmdevice}${ds}3 /mnt
 cd /mnt
-tar cfz ~/pi.tgz . --no-selinux
+sudo tar cfz ~/pi.tgz . --no-selinux
 cd
-umount /mnt
+sudo umount /mnt
 
-echo "unit s
-print free
-rm 3
-rm 2
-print free
-mkpart
-set
-print free
-quit
-" | parted $mmdevice
+sudo parted $mmdevice unit s rm 3 rm 2 mkpart primary ext4 593920s 100%
 
-mkfs.ext4 ${mmdevice}${ds}2
+sudo mkfs.ext4 -F ${mmdevice}${ds}2
 
-mount ${mmdevice}${ds}2 /mnt
-tar xfz ~/pi.tgz -C /mnt --no-selinux
+sudo mount ${mmdevice}${ds}2 /mnt
+sudo tar xfz ~/pi.tgz -C /mnt --no-selinux
 
-rm ~/pi.tgz
+sudo rm ~/pi.tgz
+
+sudo sh -c 'echo "SELINUX=disabled" > /mnt/etc/selinux/config'
+
+sudo umount /mnt
+sudo mount ${mmdevice}${ds}1 /mnt
+
+sudo sh -c 'echo "root=/dev/mmcblk0p2 rootfstype=ext4 elevator=deadline rootwait quiet ipv6.disable_ipv6=1" > /mnt/cmdline.txt'
+
+sudo umount /mnt
+sudo sync
 
 echo "
 Отключаем SELinux в /mnt/etc/selinux/config:
