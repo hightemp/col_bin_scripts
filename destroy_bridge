@@ -1,0 +1,10 @@
+#!/bin/bash
+
+args=( "$@" )
+help=( "bridge name" )
+
+source check_args 'args[@]' 'help[@]'
+
+sudo ifconfig $1 down
+sudo brctl delbr $1
+
