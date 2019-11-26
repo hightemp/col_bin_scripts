@@ -1,0 +1,11 @@
+#!/bin/bash
+
+# set -x
+
+if [ "$1" == "" ]; then
+    device="wlan0"
+else
+    device="$1"
+fi
+
+journalctl | grep $(basename $(readlink /sys/class/net/$device/device/driver))

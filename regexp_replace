@@ -1,0 +1,19 @@
+#!/usr/bin/env node
+
+var aArgs = process.argv.slice(2);
+
+if (aArgs.length!=4 && aArgs.length!=3) {
+    console.log(`${process.argv[1]} "v1" "v2" "ig" "string"`);
+    console.log(`${process.argv[1]} "v1" "v2" "string"`);
+    console.log();
+    console.log("default flags: g");
+    console.log("replacement group number: \\1");
+    process.exit(1);
+}
+
+var sReplacement = aArgs[1].replace(/(?<!\\)\\(\d+)/, "$$1");
+var sFlags = aArgs.length == 3 ? "g" : aArgs[2];
+var oRegExp = new RegExp(aArgs[0], sFlags);
+var sString = aArgs.length == 3 ? aArgs[2] : aArgs[3];
+
+console.log(sString.replace(oRegExp, sReplacement));

@@ -1,0 +1,33 @@
+#!/usr/bin/env node
+
+var aArgs = process.argv.slice(2);
+
+if (aArgs.length!=3 && aArgs.length!=2) {
+    console.log(`${process.argv[1]} "r" "pig" "string"`);
+    console.log(`${process.argv[1]} "r" "string"`);
+    console.log();
+    console.log("default flags: g");
+    console.log("p flag for displaying positions only");
+    process.exit(1);
+}
+
+var sFlags = aArgs.length == 2 ? "g" : aArgs[1];
+var bDisplayPositions = false;
+
+if (~sFlags.indexOf("p")) {
+    sFlags = sFlags.replace("p", "");
+    bDisplayPositions = true;
+}
+
+var oRegExp = new RegExp(aArgs[0], sFlags);
+var sString = aArgs.length == 2 ? aArgs[1] : aArgs[2];
+
+var oMatches = sString.match(oRegExp);
+
+for (var i=0;i<oMatches.length;i++) {
+    if (bDisplayPositions) {
+        console.log();
+    } else {
+        console.log(oMatches[i]);
+    }
+}

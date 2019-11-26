@@ -1,0 +1,5 @@
+#!/bin/bash
+
+# lspci | egrep -i --color 'network|ethernet'
+
+sudo lshw -class network
