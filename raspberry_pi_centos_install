@@ -1,0 +1,114 @@
+#!/bin/bash
+
+mmdevice="/dev/mmcblk0"
+ds=""
+
+for i in "$@"
+do
+case $i in
+    -w*|--write-image*)
+    	F_WRITE_IMAGE="1"
+    	shift
+    ;;
+    *)
+    	mmdevice="$i"
+	shift
+    ;;
+esac
+done
+
+if [ ! -b $mmdevice ]; then
+	echo "[E] device '$mmdevice' not found"
+	exit 1
+fi
+
+if [[ $mmdevice =~ [0-9]$ ]]; then
+	ds="p"
+fi	
+
+source check_internet
+
+if [ $? -ne 0 ]; then
+	echo "[E] you are offline"
+	exit 2
+fi
+
+# http://mirrors.powernet.com.ru/centos-altarch/7.7.1908/isos/armhfp/
+
+cd /tmp
+
+osf="CentOS-Userland-7-armv7hl-RaspberryPI-Minimal-1908-sda.raw.xz"
+
+if [ ! -f $osf ]; then
+	wget http://mirrors.powernet.com.ru/centos-altarch/7.7.1908/isos/armhfp/$osf
+fi
+
+sudo sh -c "xzcat $osf | dd status=progress of=$mmdevice bs=4M"
+sudo sync
+
+if [ "$F_WRITE_IMAGE" == "1" ]; then
+	exit 0
+fi
+
+sudo ls ${mmdevice}*
+sudo partx -a ${mmdevice}
+sudo ls ${mmdevice}*
+
+sudo mount ${mmdevice}${ds}3 /mnt
+cd /mnt
+sudo tar cfz ~/pi.tgz . --no-selinux
+cd
+sudo umount /mnt
+
+sudo parted $mmdevice unit s rm 3 rm 2 mkpart primary ext4 593920s 100%
+
+sudo mkfs.ext4 -F ${mmdevice}${ds}2
+
+sudo mount ${mmdevice}${ds}2 /mnt
+sudo tar xfz ~/pi.tgz -C /mnt --no-selinux
+
+sudo rm ~/pi.tgz
+
+sudo sh -c 'echo "SELINUX=disabled" > /mnt/etc/selinux/config'
+
+sudo umount /mnt
+sudo mount ${mmdevice}${ds}1 /mnt
+
+sudo sh -c 'echo "root=/dev/mmcblk0p2 rootfstype=ext4 elevator=deadline rootwait quiet ipv6.disable_ipv6=1" > /mnt/cmdline.txt'
+
+sudo umount /mnt
+sudo sync
+
+echo "
+Отключаем SELinux в /mnt/etc/selinux/config:
+
+SELINUX=disabled
+
+
+Редактируем /mnt/etc/fstab, оставляя в нем только две записи о разделах: загрузочный (/boot, без изменений) и корневой (изменяем значение UUID, которое можно узнать, изучив вывод команды blkid на Linux-е):
+
+UUID=6a1a0694-8196-4724-a58d-edde1f189b31  /     ext4    defaults,noatime 0 0
+UUID=6938-F4F2                             /boot vfat    defaults,noatime 0 0
+
+
+Наконец, изменяем параметры загрузки ядра: указываем новое расположение корневого раздела, отключаем вывод отладочной информации и (опционально) запрещаем ядру назначать IPv6 адреса на сетевых интерфейсах:
+
+# cd
+# umount /mnt
+# mount /dev/mmcblk0p1 /mnt
+
+
+Приводим содержимое /mnt/cmdline.txt к следующему виду (одна строка без переносов):
+
+root=/dev/mmcblk0p2 rootfstype=ext4 elevator=deadline rootwait quiet ipv6.disable_ipv6=1
+
+
+Готово:
+
+# cd
+# umount /mnt
+# sync
+
+Переставляем microSD в «малинку», запускаем и получаем к ней сетевой доступ по ssh (root/centos).
+"
+
