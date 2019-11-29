@@ -1,0 +1,57 @@
+#!/usr/bin/env node
+
+const fs = require('fs');
+
+var aArgs = process.argv.slice(2);
+var sCurrentDir = process.cwd();
+var bAdd = false;
+var bDelete = false;
+
+if (aArgs.length<3) {
+	console.log('git_ignore -a "rule" "filepath"')
+	console.log('git_ignore -d "rule" "filepath"')
+	process.exit(1);
+}
+
+if (aArgs[0]=='-a') {
+	bAdd = true;
+}
+
+if (aArgs[0]=='-d') {
+	bDelete = true;
+}
+
+function escapeRegExp(string) {
+  return string.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'); // $& means the whole matched string
+}
+
+function str_remove(str, startIndex, count) {
+    return str.substr(0, startIndex) + str.substr(startIndex + count);
+}
+
+var sFileContents = fs.readFileSync(aArgs[2]).toString();
+var oRegExp = new RegExp("^"+escapeRegExp(aArgs[1])+"$", "gm");
+var aMatches;
+
+while ((aMatches = oRegExp.exec(sFileContents)) != null) {
+	if (bAdd) {
+		console.log('rule already exists');
+		process.exit(2);
+	}
+	
+	if (bDelete) {
+		var iIndex = aMatches.lastIndex - aMatches[0].length;
+
+		sFileContents = str_remove(sFileContents, iIndex, aMatches[0].length + 1);
+	}
+}
+
+if (bAdd) {
+	sFileContents += `\n${aArgs[1]}`;
+}
+
+if (bDelete) {
+	console.log('rule not found');
+	process.exit(3);
+}
+
