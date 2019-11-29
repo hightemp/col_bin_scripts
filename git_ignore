@@ -58,7 +58,9 @@ while ((aMatches = oRegExp.exec(sFileContents)) != null) {
 	if (bDelete) {
 		sFileContents = str_remove(sFileContents, aMatches.index, aMatches[0].length + 1);
 
-		fs.writeFileSync(sGitIgnoreFilePath, sFileContents, { mode: 0o755 });	
+		fs.writeFileSync(sGitIgnoreFilePath, sFileContents, { mode: 0755 });	
+		fs.chmodSync(sGitIgnoreFilePath, '0755');
+		// console.log(0777 & (~process.umask()));
 	}
 }
 
@@ -69,7 +71,8 @@ if (bFound) {
 if (bAdd) {
 	sFileContents += `\n${aArgs[1]}`;
 
-	fs.writeFileSync(sGitIgnoreFilePath, sFileContents, { mode: 0o755 });
+	fs.writeFileSync(sGitIgnoreFilePath, sFileContents, { mode: 0755 });
+	fs.chmodSync(sGitIgnoreFilePath, '0755');
 }
 
 if (bDelete) {
