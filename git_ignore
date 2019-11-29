@@ -29,7 +29,14 @@ function str_remove(str, startIndex, count) {
     return str.substr(0, startIndex) + str.substr(startIndex + count);
 }
 
-var sFileContents = fs.readFileSync(aArgs[2]).toString();
+var sFileContents = "";
+
+try {
+	sFileContents = fs.readFileSync(aArgs[2]).toString();
+} catch (oError) {
+	console.log('file not found');
+}
+
 var oRegExp = new RegExp("^"+escapeRegExp(aArgs[1])+"$", "gm");
 var aMatches;
 
