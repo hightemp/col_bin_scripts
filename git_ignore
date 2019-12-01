@@ -1,0 +1,82 @@
+#!/usr/bin/env node
+
+const fs = require('fs');
+const path =require('path');
+
+var aArgs = process.argv.slice(2);
+var sCurrentDir = process.cwd();
+var sGitIgnoreFilePath = path.join(sCurrentDir, '.gitignore');
+var bAdd = false;
+var bDelete = false;
+
+if (aArgs.length<2) {
+	console.log('git_ignore -a "rule"');
+	console.log('git_ignore -d "rule"');
+	process.exit(1);
+}
+
+if (aArgs[0]=='-a') {
+	bAdd = true;
+}
+
+if (aArgs[0]=='-d') {
+	bDelete = true;
+}
+
+function escapeRegExp(string) {
+  return string.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'); // $& means the whole matched string
+}
+
+function str_remove(str, startIndex, count) {
+	var iD = 0;
+	if (startIndex + count > str.length-1) {
+		iD = -1;
+	}
+    return str.substr(0, startIndex) + str.substr(startIndex + count + iD);
+}
+
+var sFileContents = "";
+
+try {
+	sFileContents = fs.readFileSync(sGitIgnoreFilePath).toString();
+} catch (oError) {
+	console.log('[!] file not found');
+}
+
+var oRegExp = new RegExp("^"+escapeRegExp(aArgs[1])+"$", "gm");
+var aMatches;
+var bFound = false;
+
+while ((aMatches = oRegExp.exec(sFileContents)) != null) {
+	bFound = true;
+
+	if (bAdd) {
+		console.log('[E] rule already exists');
+		process.exit(2);
+	}
+	
+	if (bDelete) {
+		sFileContents = str_remove(sFileContents, aMatches.index, aMatches[0].length + 1);
+
+		fs.writeFileSync(sGitIgnoreFilePath, sFileContents, { mode: 0755 });	
+		fs.chmodSync(sGitIgnoreFilePath, '0755');
+		// console.log(0777 & (~process.umask()));
+	}
+}
+
+if (bFound) {
+	process.exit(0);
+}
+
+if (bAdd) {
+	sFileContents += `\n${aArgs[1]}`;
+
+	fs.writeFileSync(sGitIgnoreFilePath, sFileContents, { mode: 0755 });
+	fs.chmodSync(sGitIgnoreFilePath, '0755');
+}
+
+if (bDelete) {
+	console.log('[E] rule not found');
+	process.exit(3);
+}
+
