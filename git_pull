@@ -1,3 +1,4 @@
 #!/bin/bash
 
-git pull --no-ff --no-edit
+branch=$( git rev-parse --symbolic-full-name --abbrev-ref HEAD );
+git pull --no-ff --no-edit origin $branch

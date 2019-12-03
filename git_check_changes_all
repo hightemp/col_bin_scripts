@@ -1,0 +1,20 @@
+#!/bin/bash
+
+dir="."
+
+if [ "$1" != "" ];then
+        dir="$1"
+fi
+
+cd $dir
+
+for d in $(ls $dir); do
+        if [ -d $d/.git ];then
+                cd $d
+                if ! git_check_changes; then
+                        echo "[+] '$d'"
+                fi
+                cd ..
+        fi
+done
+
