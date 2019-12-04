@@ -1,0 +1,22 @@
+#!/bin/bash
+
+dir="."
+
+if [ "$1" != "" ];then
+	dir="$1"
+fi
+
+cd $dir
+
+for d in $(ls $dir); do
+	if [ -d $d/.git ];then
+		cd $d
+		git_pull
+		if [ $? -eq 0 ]; then
+			echo "[+] '$d' pulled successfully"
+		else
+			echo "[-] '$d' pulling failed"
+		fi
+		cd ..
+	fi
+done
