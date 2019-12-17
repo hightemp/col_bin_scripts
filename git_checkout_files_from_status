@@ -1,0 +1,10 @@
+#!/bin/bash
+
+for f in $(git_status_get_files_list); do
+	git checkout $f > /dev/null
+	if [ $? -eq 0 ]; then
+		echo "[+] checkouted '$f'"
+	else
+		echo "[-] checkouted '$f'"
+	fi
+done
