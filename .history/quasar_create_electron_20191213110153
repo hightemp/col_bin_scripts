@@ -1,0 +1,26 @@
+#!/usr/bin/expect -f
+set timeout -1
+set project_name [lindex $argv 0]
+spawn "quasar create $project_name"
+expect 
+
+? Project name (internal usage for dev) (appAvtoExpressProjectManager) app-avto-express-project-manager
+? Project name (internal usage for dev) app-avto-express-project-manager
+? Project product name (must start with letter if building mobile apps) appAvtoE
+? Project description (A Quasar Framework app) appAvtoExpressProjectManager
+? Project description appAvtoExpressProjectManager
+? Author
+? Author
+? Pick your favorite CSS preprocessor: (can be changed later) (Use arrow keys)
+? Pick your favorite CSS preprocessor: (can be changed later) Sass
+? Pick a Quasar components & directives import strategy: (can be changed later)
+? Pick a Quasar components & directives import strategy: (can be changed later)
+Auto import
+? Check the features needed for your project: (Press <space> to select, <a> to t
+? Check the features needed for your project:
+? Cordova/Capacitor id (disregard if not building mobile apps) (org.cordova.quas        org.
+? Cordova/Capacitor id (disregard if not building mobile apps)
+? Should we run `npm install` for you after the project has been created? (recom
+? Should we run `npm install` for you after the project has been created? (recom
+mended) yarn
+

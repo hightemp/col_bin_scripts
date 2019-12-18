@@ -8,8 +8,8 @@ fi
 
 cd $dir
 
-for d in $(ls $dir); do
-        if [ -d $d/.git ];then
+for d in $(ls .); do
+        if [ -d "$d/.git" ];then
                 cd $d
                 if ! git_check_changes; then
                         echo "[+] '$d'"

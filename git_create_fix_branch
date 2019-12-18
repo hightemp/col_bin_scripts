@@ -1,0 +1,17 @@
+#!/bin/bash
+
+last_fix_branch=$(git branch -r | grep -E "\w+/fix[0-9]+" | sort -r -t x -k 2 -g | head -n 1)
+last_fix_number=$(echo $last_fix_branch | perl -pe 's/.*?(\d+)/\1/g')
+
+fix_number=1
+
+case $last_fix_number in
+    ''|*[!0-9]*) fix_number=1 ;;
+    *) fix_number=$(( $last_fix_number + 1 )) ;;
+esac
+
+fix_branch="fix$fix_number"
+
+echo "[!] creating branch $fix_branch"
+
+git checkout -b $fix_branch base/master
