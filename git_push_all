@@ -1,0 +1,25 @@
+#!/bin/bash
+
+dir="."
+
+if [ "$1" != "" ];then
+	dir="$1"
+fi
+
+cd $dir
+
+for d in $(ls $dir); do
+	if [ -d $d/.git ];then
+		cd $d
+		if git_remote_exists origin; then
+			hub create
+		fi
+		git_push
+		if [ $? -eq 0 ]; then
+			echo "[+] '$d' pushed successfully"
+		else
+			echo "[-] '$d' pushing failed"
+		fi
+		cd ..
+	fi
+done

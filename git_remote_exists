@@ -1,0 +1,3 @@
+#!/bin/bash
+
+git config remote.$1.url > /dev/null
