@@ -1,9 +1,21 @@
 #!/bin/bash
+abs() { 
+    [[ $[ $@ ] -lt 0 ]] && echo "$[ ($@) * -1 ]" || echo "$[ $@ ]"
+}
+
+# set -x
 USAGE='[--cached] [<rev-list-options>...]
 
 Show file size changes between two commits or the index and a commit.'
 
 . "$(git --exec-path)/git-sh-setup"
+
+show_all=""
+if [ "$1" == "--all" ]; then
+    shift;
+    show_all="1"
+fi
+
 args=$(git rev-parse --sq "$@")
 [ -n "$args" ] || usage
 cmd="diff-tree -r"
@@ -22,8 +34,17 @@ eval "git $cmd $args" | {
         ;;
     esac
     total=$(( $total + $bytes ))
-
-    printf '%20d\t%s\n' $bytes "$P"
+    if [ -n "$show_all" ]; then
+	    size=$(convert_bytes_to_human $(abs $bytes))
+	    # echo ">>'$size'"
+	    # [[ "$size" != "" ]] && size=$(echo $size | sed 's/.\{1\}$//')
+	    # size=$(echo $size | sed 's/[\n\r]//')
+	    # P=$(echo $P | sed 's/[\n\r]//')
+	    values="$([[ $bytes -lt 0 ]] && echo "-" || echo "+") $size $P"
+	    # values=${values//[$'\t\r\n']}
+	    printf '%s%10s %5s %s\n' $values
+    fi
   done
-  echo total $total
+  formated_total=$(convert_bytes_to_human $(abs $total))
+  echo "total: $([[ $total -lt 0 ]] && echo "-" || echo "+")$formated_total"
 }
