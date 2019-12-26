@@ -1,0 +1,5 @@
+#!/bin/bash
+
+# sudo apt-get install ffmpeg x264 libx264-dev
+
+vlc screen:// :screen-fps=30 :screen-caching=100 --sout '#transcode{vcodec=x264,vb=4096,acodec=mpga,ab=256,scale=1,width=1280,height=800}:standard{access=http, mux=ts, dst=0.0.0.0:8080}'

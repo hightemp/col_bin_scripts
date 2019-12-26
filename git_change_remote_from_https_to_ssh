@@ -1,0 +1,18 @@
+#!/bin/bash
+
+dir="."
+
+if [ "$1" != "" ];then
+        dir="$1"
+fi
+
+cd $dir
+
+for d in $(ls $dir); do
+        if [ -d $d/.git ];then
+                cd $d
+		
+                cd ..
+        fi
+done
+
