@@ -1,0 +1,50 @@
+#!/bin/bash
+abs() { 
+    [[ $[ $@ ] -lt 0 ]] && echo "$[ ($@) * -1 ]" || echo "$[ $@ ]"
+}
+
+# set -x
+USAGE='[--cached] [<rev-list-options>...]
+
+Show file size changes between two commits or the index and a commit.'
+
+. "$(git --exec-path)/git-sh-setup"
+
+show_all=""
+if [ "$1" == "--all" ]; then
+    shift;
+    show_all="1"
+fi
+
+args=$(git rev-parse --sq "$@")
+[ -n "$args" ] || usage
+cmd="diff-tree -r"
+[[ $args =~ "--cached" ]] && cmd="diff-index"
+eval "git $cmd $args" | {
+  total=0
+  while read A B C D M P
+  do
+    case $M in
+      M) bytes=$(( $(git cat-file -s $D) - $(git cat-file -s $C) )) ;;
+      A) bytes=$(git cat-file -s $D) ;;
+      D) bytes=-$(git cat-file -s $C) ;;
+      *)
+        echo >&2 warning: unhandled mode $M in \"$A $B $C $D $M $P\"
+        continue
+        ;;
+    esac
+    total=$(( $total + $bytes ))
+    if [ -n "$show_all" ]; then
+	    size=$(convert_bytes_to_human $(abs $bytes))
+	    # echo ">>'$size'"
+	    # [[ "$size" != "" ]] && size=$(echo $size | sed 's/.\{1\}$//')
+	    # size=$(echo $size | sed 's/[\n\r]//')
+	    # P=$(echo $P | sed 's/[\n\r]//')
+	    values="$([[ $bytes -lt 0 ]] && echo "-" || echo "+") $size $P"
+	    # values=${values//[$'\t\r\n']}
+	    printf '%s%10s %5s %s\n' $values
+    fi
+  done
+  formated_total=$(convert_bytes_to_human $(abs $total))
+  echo "total: $([[ $total -lt 0 ]] && echo "-" || echo "+")$formated_total"
+}
