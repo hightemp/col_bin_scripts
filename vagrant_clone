@@ -1,0 +1,12 @@
+#!/bin/bash
+
+a=($(echo $1 | tr ',' "\n"))
+mkdir ${a[1]}
+cd ${a[1]}
+vagrant init $1
+if [ $! -eq 0 ]; then
+	vagrant up
+fi
+if [ $! -eq 0 ]; then
+	vagrant ssh
+fi
