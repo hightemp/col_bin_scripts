@@ -1,12 +1,16 @@
 #!/bin/bash
 
-a=($(echo $1 | tr ',' "\n"))
+a=($(echo $1 | tr '/' "\n"))
+if [ -d ${a[1]} ]; then
+	rm -ri ${a[1]}
+fi
 mkdir ${a[1]}
 cd ${a[1]}
-vagrant init $1
-if [ $! -eq 0 ]; then
-	vagrant up
+vagrant="env -u GEM_HOME -u GEM_PATH vagrant"
+$vagrant init $1
+if [ $? -eq 0 ]; then
+	$vagrant up
 fi
-if [ $! -eq 0 ]; then
-	vagrant ssh
+if [ $? -eq 0 ]; then
+	$vagrant ssh
 fi
