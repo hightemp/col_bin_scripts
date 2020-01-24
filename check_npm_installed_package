@@ -1,0 +1,3 @@
+#!/bin/bash
+
+npm list -g --depth 0 | grep $1

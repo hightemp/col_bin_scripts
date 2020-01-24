@@ -1,0 +1,12 @@
+#!/bin/bash
+
+p="@vue/cli"
+check_npm_installed_package $p 
+if [ $? -ne 0 ]; then
+	sudo npm i -g $p 
+fi
+vue create $1
+cd $1
+npm i
+hub init
+hub create
