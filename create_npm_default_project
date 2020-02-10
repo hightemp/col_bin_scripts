@@ -3,5 +3,6 @@
 mkdir $1
 cd $1
 npm init -y
-jq '.scripts.start="node index.js"' package.json
+s=$(jq '.scripts.start="node index.js"' package.json)
+echo "$s" > package.json
 touch index.js
