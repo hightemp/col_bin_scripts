@@ -1,6 +1,6 @@
 #!/bin/bash
 
-for i in {1..254} ;do (ping 192.168.1.$i -c 1 -w 5  >/dev/null && echo "[+] 192.168.1.$i $(host 192.168.1.$i)" &) ;done
+for i in {1..254} ;do (ping 192.168.31.$i -c 1 -w 5  >/dev/null && echo "[+] 192.168.31.$i $(host 192.168.31.$i)" &) ;done
 
 exit
 
@@ -12,7 +12,7 @@ if [ "$1" != "" ]; then
 	fi;	
 else
 	for (( i=1; i<255; i++ )); do 
-		ip="192.168.1.$i";
+		ip="192.168.31.$i";
 		$0 $ip
 	done;
 fi;

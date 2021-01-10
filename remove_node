@@ -1,0 +1,8 @@
+#!/bin/bash
+
+sudo apt-get remove nodejs
+# DO NOT INSTALL NODEJS USING APT-GET, KEEP THE NODE INSTALLATION.
+sudo apt-get update
+sudo apt-get upgrade
+npm cache clean -f
+npm install -g n

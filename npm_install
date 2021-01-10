@@ -1,0 +1,7 @@
+#!/bin/bash
+npm_clean
+if [ -f "$PWD/yarn.lock" ]; then
+	yarn
+else
+	npm i
+fi

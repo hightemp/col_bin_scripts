@@ -1,0 +1,5 @@
+#!/bin/bash
+
+c=$(fast | awk "{ sub }")
+
+echo "<text>$c</text>"

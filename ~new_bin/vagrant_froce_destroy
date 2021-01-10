@@ -1,0 +1,3 @@
+#!/bin/bash
+
+killall -9 VBoxHeadless && vagrant destroy

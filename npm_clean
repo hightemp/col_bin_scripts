@@ -1,0 +1,3 @@
+#!/bin/bash
+rm -rf $PWD/node_modules
+echo "[+] REMOVED: node_modules"

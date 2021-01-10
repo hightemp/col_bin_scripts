@@ -1,0 +1,6 @@
+#!/bin/bash
+
+p=$(dirname $1)
+n=$(basename $1)
+sudo cp $p/$n $p/$n.backup
+sudo vim $p/$n 

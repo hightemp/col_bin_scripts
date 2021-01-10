@@ -1,0 +1,19 @@
+#!/bin/bash
+
+a=""
+b=""
+for i in google.com yandex.ru front.avto.express frontdev.avto.express;do
+	curl $i -s -f -o /dev/null
+	c=$(if [ "$?" -ne 0 ];then echo "-"; else echo "+";fi;)
+	a="$a $c"
+	b="$b $i $c"
+done;
+
+# for i in 5.187.0.202;do
+#         ping -c 1 -W 1 $i
+#         c=$(if [ "$?" -ne 0 ];then echo "-"; else echo "+";fi;)
+#         a="$a $c"
+#         b="$b $i $c"
+# done;
+
+echo "<txt>$a</txt><tool>$b</tool>"

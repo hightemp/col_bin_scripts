@@ -1,0 +1,5 @@
+#!/bin/bash
+echo "[!] USING: $1"
+sudo setfacl -m g:libvirt:x $1
+sudo setfacl -m u:libvirt-qemu:x $1
+sudo setfacl -m g:libvirt-qemu:x $1

@@ -1,0 +1,7 @@
+#!/bin/bash
+
+p=$(dirname $1)
+n=$(basename $1)
+sudo mv $p/$n $p/$n.backup
+sudo touch $p/$n
+sudo vim $p/$n
