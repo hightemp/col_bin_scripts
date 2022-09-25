@@ -1,0 +1,170 @@
+#!/usr/bin/env node
+
+const fs = require('fs');
+const path = require('path');
+const { argv } = require('process');
+
+var aDetectingFrameworksPaths = [
+    [ 
+        ['php', 'php-server-app'], 
+        [
+            'src',
+            'vendor',
+            'RedBeanPHP.php',
+            'start_dev_server.sh',
+        ]
+    ],
+    [
+        ['python', 'django'], 
+        [
+            'apps/__init__.py',
+            'app/__init__.py',
+            'app/admin.py',
+            '__ANY__/app/__init__.py',
+            '__ANY__/app/admin.py',
+        ]
+    ],
+    [
+        ['python', 'simple-python-project'], 
+        [
+            '__ANY__.py',
+        ]
+    ],
+    [
+        ['rust'], 
+        [
+            'Cargo.toml',
+        ]
+    ],
+    [
+        ['cpp', 'qt'], 
+        [
+            '__ANY__.pro',
+        ]
+    ],
+    [
+        ['cpp'], 
+        [
+            '__ANY__.cpp',
+        ]
+    ]
+
+];
+
+var aDetectingByName = [
+    ['wapp', ['web applications']],
+    ['capp', ['console applications']],
+    ['app', ['desktop applications']],
+    ['col', ['collections']],
+    ['ext', ['browser extensions']],
+    ['hw', ['hardware']],
+    ['dev', ['development']],
+    ['wp', ['web pages']],
+    ['__', ['special']],
+    ['~', ['junk']],
+    ['*', ['other']],
+]
+
+var aGroupedScannedFodlers = [];
+var oGrouped = {};
+
+function escapeRegExp(string) {
+    return string.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'); // $& means the whole matched string
+}
+
+function fnScanDir(sPath)
+{
+    return fs.readdirSync(sPath)
+}
+
+function fnDetectGroupForFile(sPath)
+{
+    if (!fs.lstatSync(sPath).isDirectory()) {
+        return ['other'];
+    }
+
+    var aPath = [];
+
+    var sBasename = path.basename(sPath);
+
+    for (var aNameGroup of aDetectingByName) {
+        if (sBasename.startsWith(aNameGroup[0]) || aNameGroup[0]=='*') {
+            aPath = aPath.concat(aNameGroup[1]);
+            break;
+        }
+    }
+
+    var aFiles = fnScanDir(sPath);
+    var aGroups = [];
+
+    for (var aGroup of aDetectingFrameworksPaths) {
+        var iSum = 0;
+
+        for (var sPathMask of aGroup[1]) {
+            var sRegExp = escapeRegExp(sPathMask);
+            sRegExp = sRegExp.replace('__ANY__', '.*');
+
+            for (var sFilePath of aFiles) {
+                sFilePath = path.join(sPath, sFilePath)
+                
+                if (!fs.lstatSync(sFilePath).isDirectory()) {
+                    return aPath.concat(['other']);
+                }
+                if ((new RegExp(sRegExp)).test(sFilePath)) {
+                    iSum++;
+                }
+            }
+        }
+
+        aGroups.push([aGroup[0], iSum]);
+    }
+
+    aGroups = aGroups.sort((aI) => aI[1]);
+
+    return aPath.concat(aGroups[0][0]);
+}
+
+function fnSetRecObjectValue(oObj, aKeys, sValue)
+{
+    var sKey = aKeys.pop();
+    if (!oObj[sKey]) {
+        if (aKeys.length) {
+            oObj[sKey] = {};
+        } else {
+            oObj[sKey] = [];
+        }
+    }
+
+    if (Array.isArray(oObj[sKey])) {
+        oObj[sKey].push(sValue);
+    } else {
+        fnSetRecObjectValue(oObj[sKey], aKeys, sValue);
+    }
+}
+
+function fnDetectPaths(sPath)
+{
+    var aFolders = fnScanDir(sPath);
+
+    aFolders.forEach((sDirPath) => {
+        sDirPath = path.join(sPath, sDirPath);
+        var sBasename = path.basename(sDirPath);
+        var aPath = fnDetectGroupForFile(sDirPath);
+
+        aGroupedScannedFodlers.push([sBasename, aPath]);
+    });
+
+    for (var aItem of aGroupedScannedFodlers) {
+        var aKeys = aItem[1].reverse();
+        fnSetRecObjectValue(oGrouped, aKeys, aItem[0]);
+    }
+}
+
+if (!fs.lstatSync(argv[2]).isDirectory()) {
+    console.log(`Directory not found: ${argv[2]}`);
+    return;
+}
+
+fnDetectPaths(argv[2]);
+
+console.log(JSON.stringify(oGrouped, null, 4));

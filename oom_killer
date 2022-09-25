@@ -1,0 +1,116 @@
+#!/bin/env node
+
+const find = require('find-process');
+// const free = require("free-memory")
+const { execSync, exec } = require('child_process');
+
+var aAppsList = [
+    {
+        sName: "firefox",
+        aFilter: ["-contentproc"],
+    },
+    {
+        sName: "librewolf",
+        aFilter: ["-contentproc"],
+    },
+    {
+        sName: "chrome",
+        aFilter: ["--type"],
+    },
+    {
+        sName: "opera",
+        aFilter: ["--type"],
+    }
+];
+
+/** NOTE: Настройки */
+const iMinMemoryGB = 3;
+const sAudioOutputInterface = ``;
+
+/**
+ * 
+ * @param number iI: 0 - total - used, 3 - free, 6 - available
+ * 
+ * @returns number
+ */
+function fnGetFreeMemory(iI=0) {
+    var sFreeOutput = execSync(`free`).toString();
+
+    var aLines = sFreeOutput.split(/\n/);
+    var aColumns = aLines[1].split(/\s+/);
+
+    var iResult = 0;
+
+    if (!iI) {
+        iResult = aColumns[1]*1 - aColumns[2]*1;
+    } else {
+        iResult = aColumns[iI]*1;
+    }
+
+    return Math.round(iResult/(1000*1000)*10)/10;
+}
+
+async function fnKillAllApps() {
+    for (var oAppItem of aAppsList) {
+        ((oAppItem) => {
+            find('name', oAppItem.sName)
+                .then(
+                    function (aList) {
+                        aList = aList.filter((oItem) => !oAppItem.aFilter.some((sV) => ~oItem.cmd.indexOf(sV)) );
+                        aList.forEach((oI) => execSync(`kill -9 ${oI.pid}`) );
+                        // console.log(aList.pid);
+                    }, 
+                    function (oErr) {
+                        console.log(oErr.stack || oErr);
+                    }
+                );
+        })(oAppItem);
+    }
+}
+
+var iSoundTimerID = 0;
+var bSoundIsPlaying = false;
+
+function fnPlaySound() {
+    // if (iSoundTimerID) {
+    //     return;
+    // }
+    if (bSoundIsPlaying) {
+        return;
+    }
+
+    exec(`mplayer /home/hightemp/__SpecFolders__/Sounds/alarm_03.mp3`);
+    bSoundIsPlaying = true;
+
+    iSoundTimerID = setTimeout(() => {
+        iSoundTimerID = 0;
+        bSoundIsPlaying = false;
+    }, 17000);
+}
+
+function fnCheckFreeMemory()
+{
+    var iFreeGB = fnGetFreeMemory(3);
+    // var iAvailableGB = fnGetFreeMemory(5);
+
+    // iAvailableGB < iMinMemoryGB ||
+    if (iFreeGB < iMinMemoryGB) {
+        // console.log(`Free memory < ${iMinMemoryGB}GB: ${iFreeGB}GB`);
+        console.log(`[!] ${iFreeGB} `);
+        fnPlaySound();
+        fnKillAllApps();
+    } else {
+        console.log(`[+] ${iFreeGB} `);
+    }
+}
+
+fnCheckFreeMemory();
+
+// setInterval(() => {
+//     fnCheckFreeMemory();
+// }, 1100);
+
+// free(function (err, info) {
+//     console.log(info.mem.usable/(1000*1000), (info.mem.total - info.mem.used)/(1000*1000));
+// });
+

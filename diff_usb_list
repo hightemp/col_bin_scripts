@@ -1,0 +1,19 @@
+#!/bin/bash
+
+FILE1="/tmp/usb_list_01.txt"
+FILE2="/tmp/usb_list_02.txt"
+
+if [ ! -f "$FILE1" ]; then
+	lsusb > "$FILE1"
+fi
+
+while :
+do
+	lsusb > $FILE2
+	DIFF=$(diff $FILE1 $FILE2 2>&1)
+	if [ $? -ne 0 ]; then
+		clear
+		echo -e "$DIFF"
+		echo "------------------------------------------------"
+	fi
+done

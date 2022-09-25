@@ -1,0 +1,32 @@
+#!/usr/bin/env php
+<?php
+ini_set('max_execution_time', 0);
+set_time_limit(0);
+ini_set("default_socket_timeout", 1);
+ini_set('memory_limit', -1);
+
+$iStart = time();
+for ($iI=1; $iI<255; $iI++) {
+	$host = "192.168.31.$iI";
+	$ports = array(21, 22, 25, 80, 81, 110, 143, 443, 587, 2525, 3306);
+ 
+	foreach ($ports as $port)
+	{
+	    $connection = @fsockopen($host, $port, $errno, $errstr, 1);
+
+	 	$iCurrent = time();
+	 	$sDiff = gmdate("H:i:s", $iCurrent-$iStart);
+	    echo "[$sDiff] " . $host . ':' . $port . "                          \r";
+	    
+	    if (is_resource($connection))
+	    {
+	        echo '' . $host . ':' . $port . ' ' . '(' . getservbyport($port, 'tcp') . ') is open.' . "\n";
+	 
+	        fclose($connection);
+	    }
+	    else
+	    {
+	        // echo '' . $host . ':' . $port . ' is not responding.' . "                      \r";
+	    }
+	}
+}

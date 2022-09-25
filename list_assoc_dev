@@ -1,0 +1,5 @@
+#!/bin/bash
+
+for i in $(ls /dev/); do
+  udevadm info -a -p  $(udevadm info -q path -n $i)
+done

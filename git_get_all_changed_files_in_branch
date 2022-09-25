@@ -1,0 +1,82 @@
+#!/usr/bin/env node
+
+/*
+sBranch="$1"
+# sBranch="${sBranch:=}" 00
+
+# -E --grep="^APL-GL-409|into APL-GL-409"
+
+if [[ $sBranch == "" ]]; then
+    echo "[>] Getting current branch"
+    sBranch=$(git rev-parse --abbrev-ref HEAD)
+fi
+
+echo "[!] Branch: $sBranch"
+
+# sOpts="--pretty=format:'%h' -E --grep='^$sBranch|into $sBranch'"
+sOpts="--pretty=format:'%h' -E --grep='^$sBranch'"
+sGit="git log $sOpts"
+
+echo "[!] $sGit"
+
+# Last commit
+sLastCommitHash=$(eval $sGit | head -n 1)
+
+echo "[!] Last commit: $sLastCommitHash"
+
+# First commit
+sFirstCommitHash=$(eval $sGit | tail -n 1)
+
+echo "[!] First commit: $sFirstCommitHash"
+
+iCount=$(git diff --name-only "$sLastCommitHash" "$sFirstCommitHash" | cat | wc -l)
+
+echo "[!] Count: $iCount"
+
+git diff --name-only "$sLastCommitHash" "$sFirstCommitHash~1" | cat
+*/
+
+const { execSync } = require('child_process');
+
+var sBranch = process.argv[2] ?? "";
+var sCheckBranch = process.argv[3] ?? "true"; 
+
+const exec = (sCommand) => execSync(sCommand).toString();
+const __log = (sM, ...aA) => console.log(sM, aA.length ? [...aA] : '');
+
+if (!sBranch) {
+    // __log("[>] Getting current branch");
+    sBranch = exec(`git rev-parse --abbrev-ref HEAD`).trim();
+}
+
+// __log(`[!] Branch: ${sBranch}`);
+
+// sOpts="--pretty=format:'%h' -E --grep='^$sBranch|into $sBranch'"
+var sOpts = ``
+if (sCheckBranch == "true") {
+	sOpts = `--grep='^${sBranch}'`
+}
+sOpts = `--pretty=format:'%H' -E ${sOpts}`;
+var sGit = `git log ${sOpts}`;
+
+__log(`[!] ${sGit}`);
+
+var sList = exec(`eval ${sGit}`);
+var aList = sList.split(/\n/);
+
+// __log(`[!] ${sList}`);
+// __log(`[!] Count: ${aList.length}`);
+
+var aFilesList = [];
+
+aList.forEach((sCommitHash) => {
+    var sFilesList = exec(`git diff --name-only "${sCommitHash}" "${sCommitHash}~1" | cat`);
+    aFilesList = [...aFilesList, ...(sFilesList.split(/\n/))];
+});
+
+aFilesList = [...new Set(aFilesList)];
+aFilesList = aFilesList.filter((sI) => sI)
+aFilesList = aFilesList.sort();
+
+__log(aFilesList.join(`\n`));
+

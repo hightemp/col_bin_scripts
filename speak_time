@@ -1,0 +1,59 @@
+#!/bin/env node
+
+const { execSync } = require('child_process');
+
+var oDate = new Date();
+var iMinutes = oDate.getMinutes();
+
+if ((iMinutes*1)) {
+    // console.log("!= 00");
+    process.exit(0);
+}
+
+var iHours = oDate.getHours();
+var sText = "";
+
+// 0 часов
+// 1 час
+// 2 часа
+// 3 часа
+// 4 часа 
+// 5 часа 
+// 6 часов
+// 7 часов
+// 8 часов
+// 9 часов 
+// 10 часов
+// 11 часов 
+// 12 часов
+// 13 часов
+// 14 часов
+// 15 часов
+// 16 часов 
+// 17 часов 
+// 18 часов
+// 19 часов 
+// 20 часов
+// 21 час
+// 22 часа
+// 23 часа
+
+if (iHours == 0) {
+    sText = `${iHours} часов`;
+}
+
+if (iHours == 1 || iHours == 21) {
+    sText = `${iHours} час`;
+}
+
+if ((iHours >= 2 && iHours <= 5) || (iHours >= 22 && iHours <= 23)) {
+    sText = `${iHours} часа`;
+}
+
+if (iHours >= 6 && iHours <= 20) {
+    sText = `${iHours} часов`;
+}
+
+var sCommand = `echo "${sText}" | festival --tts`;
+
+execSync(sCommand);

@@ -1,0 +1,3 @@
+#!/bin/bash
+echo "$1" >> pip_installs.txt
+pip install --no-cache-dir $1

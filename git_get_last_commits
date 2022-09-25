@@ -1,0 +1,10 @@
+#!/bin/bash
+
+OPTS=""
+if [[ "$1" == "true" ]]; then
+	OPTS="--grep=\"^`git rev-parse --abbrev-ref HEAD`\""
+fi
+
+git log --pretty=format:"%cd %h %s" $OPTS | head
+
+echo "";

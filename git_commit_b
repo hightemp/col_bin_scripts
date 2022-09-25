@@ -1,0 +1,19 @@
+#!/bin/bash
+
+echo "----------------------------------------"
+read -p "[1/2] git - add all? " an
+case ${answer:0:1} in
+    y|Y )
+        git add .
+    ;;
+    * )
+    	# TODO:
+    ;;
+esac
+
+echo "----------------------------------------"
+read -p "[2/2] git comment: " git_comment
+git commit -am $git_comment
+
+echo "----------------------------------------"
+git push

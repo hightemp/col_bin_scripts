@@ -1,0 +1,2 @@
+#!/bin/bash
+watch -n10 list_usb_sdevices

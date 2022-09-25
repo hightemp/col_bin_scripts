@@ -1,0 +1,51 @@
+#!/bin/bash
+
+####################
+#
+# Script: Checking process and if it is not running will start that process
+#
+####################
+
+#*** CONFIG ***
+
+CMD_PATH="" # Your Root Path to Script
+declare -a PROCESSES=(); # Your Script File Name
+
+source "./autostarter_list.sh"
+
+PRINT_TITLE_SCRIPT="PROCESSES AUTOSTARTER" # Your Script Title Here
+
+#*** Vars ***
+CHECK=$0
+
+LOG_LOCATION=/dev/null
+DATE=`date`
+
+#*** Function ***
+function monitor_process {
+    local OUTPUT=$(ps aux | grep -v grep | grep -v $CHECK |grep $1)
+    # Check the process if it is running?
+    if [ "${#OUTPUT}" -gt 0 ] ; then
+        # Server is running
+        echo "  [*] Process '$1' is running."
+    else
+        # Service is not running, run the consumer process
+        echo "  [x] Start Process '$1'"
+        $CMD_PATH$1 > $LOG_LOCATION &
+        # $CMD_PATH$1 &
+    fi
+}
+
+#*** Start ***
+echo " *** Running - Start $PRINT_TITLE_SCRIPT ( $DATE ) ***"
+
+while : 
+do
+	for var in "${PROCESSES[@]}"
+	do
+		monitor_process ${var}
+	done
+done
+
+echo " *** Finished - $PRINT_TITLE_SCRIPT ***"
+exit

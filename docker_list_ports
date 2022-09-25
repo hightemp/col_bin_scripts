@@ -1,0 +1,9 @@
+for i in `docker ps | awk '{print $1}'`; do 
+	# echo "-----------------"; 
+	# echo $i; 
+	# docker inspect --format '{{ .NetworkSettings.IPAddress }}' $i; 
+	# docker inspect --format='{{.Id}};;;{{.Name}};;;{{.Image}};;;{{range $p, $conf := .Config.ExposedPorts}} {{$p}} {{end}}' $i
+	docker inspect --format='{{.Name}};;;{{range $p, $conf := .Config.ExposedPorts}}{{$p}} {{end}}' $i
+	# docker inspect --format='{{range $p, $conf := .Config.ExposedPorts}} {{$p}} {{end}}' $i; 
+	# echo "-----------------"; 
+done

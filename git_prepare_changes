@@ -1,0 +1,16 @@
+#!/bin/bash
+
+echo '### Изменения'
+
+echo ''
+
+echo '```'
+git_get_all_changed_files_in_branch
+echo '```'
+
+echo ''
+
+echo '```'
+git_get_last_commits
+echo '```'
+

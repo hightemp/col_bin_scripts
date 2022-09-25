@@ -1,0 +1,23 @@
+#!/bin/bash
+
+export SCRIPT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )"
+PROJECT_REPOSITORY="https://a.panov:gy%5B%2F%3E8%3EqAL%60BOro%22@gtl.expobank.ru/avtoplatforma/front.git"
+MAIN_BRANCH=prod
+TEST_BRANCH=test
+REMOTE_NAME=origin
+REPO_DIR="/run/media/hightemp/dea1c06e-07a4-4e78-8a86-ff1150df2e3f/home/hightemp/WorkProjects/front_fast_01"
+
+if [ "$1" == "" ]; then
+    echo "Нужно название ветки"
+    exit 1
+fi
+
+cd $REPO_DIR
+
+echo "[!] git fecth"
+
+git fetch --all
+
+git checkout -b $1 $MAIN_BRANCH
+
+git push $REMOTE_NAME $1
