@@ -1,0 +1,33 @@
+#!/usr/bin/env node
+
+const fs = require('fs');
+const path = require('path');
+
+const sFilePath = process.argv[2];
+const sPath = process.cwd();
+
+if (sFilePath) {
+    var sResult = '';
+    const sFullPath = sFilePath.startsWith('/') ? sFilePath : path.join(sPath, sFilePath);
+
+    if (sFullPath && fs.lstatSync(sFullPath).isFile()) {
+        console.log(`[>] FILE: ${sFullPath}`);
+
+        var sContent = fs.readFileSync(sFullPath).toString();
+
+        var aMatch = sContent.matchAll(/^(#{2,}) ([^\n]*?)\n/gm);
+        aMatch = [...aMatch];
+
+        for (var aMatchItem of aMatch) {
+            var sLevel = aMatchItem[1];
+            var sHeader = aMatchItem[2];
+
+            var sLink = sHeader.toLowerCase().replaceAll(/[^0-9a-zA-Zа-яёА-ЯЁ ]+/g, '').replaceAll(/\s+/g, '-');
+
+            sResult += `  `.repeat(sLevel.length-2)+`- [${sHeader}](#${sLink})\n`;
+        }
+    }
+
+    console.log(sResult);
+}
+
