@@ -5,7 +5,7 @@ alias cd_s="cd ~/srv"
 alias vim_srv="cd /srv/README.md"
 alias v="vim"
 alias n="nvim"
-alias nn="nano
+alias nn="nano"
 alias reload="source ~/.bashrc"
 
 # Youtube
