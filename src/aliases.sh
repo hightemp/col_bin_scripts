@@ -1,14 +1,18 @@
+# Мое..
+alias cd_p="cd ~/Projects"
+alias cd_t="cd ~/ForTesting"
+alias cd_s="cd ~/srv"
+alias vim_srv="cd /srv/README.md"
+alias v="vim"
+alias n="nvim"
+alias nn="nano
+alias reload="source ~/.bashrc"
+
 # Youtube
 alias youtube_mp3='youtube-dl --extract-audio --audio-format mp3 '
 alias youtube_channel='youtube-dl -f best -ciw -o "%(title)s.%(ext)s" -v '
 
 # Git
-alias cd_projects="cd /home/hightemp/__SpecFolders__/Projects"
-alias cd_workprojects="cd /home/hightemp/__SpecFolders__/WorkProjects"
-alias cd_servers="cd /home/hightemp/__SpecFolders__/Servers/__vms__"
-alias cd_repos="cd /home/hightemp/__SpecFolders__/FromRemoteRepos"
-alias reload="source ~/.bashrc"
-
 unalias g
 function g {
     local sURL

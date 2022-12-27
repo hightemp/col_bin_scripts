@@ -1,5 +1,10 @@
 # col_bin_scripts
 
-https://github.com/hightemp/colBinScripts
-
 Коллекция скриптов для администрирования ос на основе linux.
+
+## Установка
+
+```bash
+git clone https://github.com/hightemp/col_bin_scripts
+cd col_bin_scripts
+```
